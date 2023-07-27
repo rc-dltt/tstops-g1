@@ -18,6 +18,12 @@ Let's install it if you haven't already
 brew install --cask visual-studio-code
 ```
 
+Some useful VS code extensions that can make your life easier developing graphQL applications with Apollo are:
+
+* GraphQL.vscode-graphql
+* apollographql.vscode-apollo
+
+
 ## git
 
 Let's install git if it's not already present
