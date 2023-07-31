@@ -16,7 +16,8 @@ cd $app_name
 Now that we have out app folder, let's initialize a new NodeJs application
 
 ```bash
-npm init --yes && npm pkg set type="module"
+npm init
+...
 ```
 
 ## Install dependencies
@@ -40,23 +41,28 @@ Create a new file named `tsconfig.json` in the root folder of your project
 ```json
 {
     "compilerOptions": {
-        "rootDirs": [
-            "src"
-        ],
-        "outDir": "dist",
-        "lib": [
-            "es2022"
-        ],
-        "target": "es2022",
-        "module": "esnext",
+        "target": "ESNext",
+        "module": "commonjs",
+        "outDir": "./dist" ,
+        "strict": false,
         "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "src/types/*"
+            ]
+        },
         "esModuleInterop": true,
         "types": [
             "node"
-        ]
+        ],
     },
-    "include": ["src/**/*"],
-    "exclude": ["**/*.spec.ts"]
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "**/*.spec.ts"
+    ],
 }
 ```
 
@@ -103,19 +109,20 @@ npm start
 
 ## Schema
 
-In the `index.ts` file let's add the graphql schema we are going to use for this application:
+Let's create a new `schema.ts` file and add the graphql schema we are going to use for this application:
 
 ```ts
-const typeDefs = `#graphql
+export const typeDefs = `#graphql
 
   type Query {
-    races: [Race]
+    races: [Race]!
+    horses: [Horse]!
   }
 
   type Race {
     id: ID!
     no: Int
-    startTime: Date
+    startTime: String!
     venue: String!
     horses: [Horse]!
   }
@@ -130,45 +137,102 @@ const typeDefs = `#graphql
 
 The domain model is very simple: a collection of races, each one having a set of racing horses.
 
-Now we can add our datasource. For this lab we are going to use a in memory list of Race objects as defined in our graph
+Now we can add our datasource. For this lab we are going to use a in memory list of Race and Horse objects as defined in our graph
+
+
+Let's create a data folder under `src`:
+
+```bash
+mkdir data
+```
+
+and two files: `horses.ts` and `races.ts`
 
 ```ts
-const races = [
-  {
-    id: "race#1",
-    no: 1001,
-    startTime: "2023-08-31T19:00:00",
-    venue: "Sha Tin Racecourse",
-    horses: [],
-  },
-  {
-    id: "race#2",
-    no: 1002,
-    startTime: "2023-08-31T19:15:00",
-    venue: "Happy Valley Racecourse",
-    horses: [],
-  },
+export const HORSES = [
+    {
+        id: "horse#1",
+        name: "Tornado",
+        rank: 11,
+    },
+    {
+        id: "horse#2",
+        name: "Roncinant",
+        rank: 99,
+    },
+    {
+        id: "horse#3",
+        name: "Harry Trotter",
+        rank: 54,
+    },
+    {
+        id: "horse#4",
+        name: "Pony Soprano",
+        rank: 14,
+    },
+    {
+        id: "horse#5",
+        name: "Neigh Sayer",
+        rank: 86,
+    },
+    {
+        id: "horse#6",
+        name: "Pony Montana",
+        rank: 77,
+    },
 ];
 ```
 
-We can now write the resolvers - in this case we only have one.
-The races resolver will just return our list of races
+```ts
+import { HORSES } from "./horses";
+
+export const RACES = [
+    {
+        id: "race#1",
+        no: 1001,
+        startTime: "2023-08-31T19:00:00",
+        venue: "Sha Tin Racecourse",
+        horses: HORSES.slice(0,3),
+    },
+    {
+        id: "race#2",
+        no: 1002,
+        startTime: "2023-08-31T19:15:00",
+        venue: "Happy Valley Racecourse",
+        horses: HORSES.slice(3),
+    },
+];
+```
+
+We can now write the resolvers which will just return out in memory collections.
+Let's add a new `resolvers.ts` file 
 
 ```ts
-const resolvers = {
-  Query: {
-    races: () => races,
-  },
+import { HORSES } from "./data/horses";
+import { RACES } from "./data/races";
+
+export const resolvers = {
+    Query: {
+        races: () => RACES,
+        horses: () => HORSES,
+    }
 };
 ```
 
-Finally we can create and initialize an instance of apollo server.
+Finally we can create and initialize an instance of apollo server in `index.ts`.
 
 In order to do that, let's first add the following `import` directives at the top of our file
 
 ```ts
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
+```
+
+we need to import our schema and resolvers
+
+```ts
+import { typeDefs } from "./schema";
+import { resolvers } from "./resolvers";
 ```
 
 and then we can initialize and run the server instance
@@ -179,13 +243,14 @@ async function start() {
     typeDefs,
     resolvers,
   });
+  const PORT = parseInt(process.env.PORT || "4001");
   const { url } = await startStandaloneServer(server, {
-    listen: { port: 4000 },
+    listen: { port: PORT },
   });
   console.log(`Server is running at ${url}`);
 }
 
-start();
+ssstart();
 ```
 
 ## Querying the server
@@ -199,10 +264,10 @@ npm start
 We should see the following output
 
 ```bash
-Server is running at http://localhost:4000/
+Server is running at http://localhost:4001/
 ```
 
-and browsing to [http://localhost:4000/](http://localhost:4000/) we should see the default apollo studio page where we can test our first query
+and browsing to [http://localhost:4001/](http://localhost:4001/) we should see the default apollo studio page where we can test our first query
 
 You can build the query interactively, ideally something like this:
 

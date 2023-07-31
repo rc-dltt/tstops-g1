@@ -1,26 +1,25 @@
 {
-    "compileOnSave": true,
     "compilerOptions": {
-        "rootDirs": [
-            "src", 
-        ],
-        "outDir": "dist",
-        "lib": [
-            "ES2022"
-        ],
-        "allowSyntheticDefaultImports": true,
-        "target": "ES2022",
-        "module": "ESNext",
-        "moduleResolution": "Node",
+        "target": "ESNext",
+        "module": "commonjs",
+        "outDir": "./dist" ,
+        "strict": false,
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "src/types/*"
+            ]
+        },
         "esModuleInterop": true,
         "types": [
             "node"
-        ]
+        ],
     },
     "include": [
         "src/**/*"
     ],
     "exclude": [
         "**/*.spec.ts"
-    ]
+    ],
 }

@@ -7,11 +7,9 @@
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "private": true,
-  "type": "module",
   "dependencies": {
     "@apollo/server": "^4.8.1",
     "graphql": "^16.7.1"
