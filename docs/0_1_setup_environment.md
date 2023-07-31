@@ -2,10 +2,22 @@
 
 We are going to need `Visual Studio code` as our IDE, `git`, `docker` with `compose`, `node` with `npm` and `postman`
 
+### MacOS
+
 For this tutorial we are working on MacOS and to make things easier we are going to install `homebrew` as a package manager
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+```
+
+### Windows
+
+If you are using Windows 10 or above, you can use `winget` package manager
+
+For example:
+
+```poweshell
+winget install <package-id>
 ```
 
 ## IDE
@@ -30,14 +42,6 @@ Let's install git if it's not already present
 
 ```bash
 brew install git
-```
-
-If you are working on windows you can easily do the same via winget
-
-on Windows
-
-```poweshell
-winget install --id Git.Git -e --source winget
 ```
 
 check via 
