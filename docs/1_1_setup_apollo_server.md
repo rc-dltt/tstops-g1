@@ -305,6 +305,40 @@ Runing the query should return the list or races
 }
 ```
 
+## Docker
+
+Let's build and run the server application with docker
+
+For this we need to create a `Dockerfile` with the following content
+
+```Dockerfile
+FROM node:18
+
+WORKDIR /usr/src/app
+
+COPY src ./src
+COPY package.json ./
+COPY tsconfig.json ./
+
+RUN npm install
+RUN npm run compile
+
+CMD ["./dist/index.js"]
+```
+
+Let's build
+
+```bash
+docker build -t hkjc-demo-grapqh-server .
+```
+
+and run
+
+```bash
+docker run --rm -p 4001:4001 -e PORT=4001 hkjc-demo-grapqh-server
+> Server is running at http://localhost:4001/
+```
+
 ## Next
 
 You have completed this section
