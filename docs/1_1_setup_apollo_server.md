@@ -1,6 +1,10 @@
 # 1.1 Setup Apollo server
 
+In this lab section we are going to create a simple graphQL server using Apollo
+
 ## Create the NodeJS module
+
+The first step is to create a folder for our application
 
 ```bash
 app_name=<your app folder name>

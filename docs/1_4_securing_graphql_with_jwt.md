@@ -7,4 +7,4 @@
 
 You have completed this section
 
-[< prev](./1_3_queries_and_mutations.md) | [home](../readme.md) | [next >](./1_5_1_setup_supergraph_with_apollo_os.md)
+[< prev](./1_3_queries_and_mutations.md) | [home](../readme.md) | [next >](./1_5_setup_supergraph_with_apollo_os.md)
