@@ -7,7 +7,7 @@ In this lab section we are going to create a simple graphQL server using Apollo
 The first step is to create a folder for our application
 
 ```bash
-app_name=<your app folder name>
+export app_name=<your app folder name>
 
 mkdir $app_name
 cd $app_name
