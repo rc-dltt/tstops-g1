@@ -8,23 +8,34 @@ In order to use an existing graph as subgraph we need to make some changes to ou
 
 A list of federated-compatibel subgraph libraries can be found in the official documentation [here](https://www.apollographql.com/docs/federation/building-supergraphs/supported-subgraphs) and `@apollo/subgraph` is one of these.
 
-Let's add `@apollo/subgraph` and `graphql-tag`
+Change current directory to `1_5_setup_supergraph/server`; this is where we left off from section [1.1 Setup Apollo Server](./1_1_setup_apollo_server.md)
 
-In your server application root folder run 
+```bash
+cd ./1_5_setup_supergraph/server
+```
+
+Let's add `@apollo/subgraph` and `graphql-tag`
 
 ```bash
 npm install graphql-tag @apollo/subgraph
 ```
 
-We can now update our schema to make it a federation-compatible subgraph. Open `schema.ts` and add the following line at the top
+We can now update our schema to make it a federation-compatible subgraph. Open `schema.ts` and add the tag import
 
-```gql
+```ts
+import { gql } from "graphql-tag"; 
+```
+
+
+Then add the following line at the top of the schema
+
+```graphql
 extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable"])
 ```
 
 and finally add `@key` directive to our entities:
 
-```gql
+```graphql
 ...
 type Race @key(fields: "id") {
     ...
@@ -74,7 +85,10 @@ and change the `ApolloServer` initialization as follows
 
 ```ts
 const server = new ApolloServer({
-    schema: buildSubgraphSchema(typeDefs, resolvers)
+    schema: buildSubgraphSchema({
+      typeDefs, 
+      resolvers
+    })
 });
 ```
 
