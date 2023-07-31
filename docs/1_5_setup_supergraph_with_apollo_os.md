@@ -378,6 +378,14 @@ This should return something like
 }
 ```
 
+If not responding, we can configure the cloud rourter in the settings to allow cors origins (NOT for production)
+
+```yaml
+cors:
+  allow_any_origin: true
+...
+```
+
 ## Next
 
 You have completed this section
