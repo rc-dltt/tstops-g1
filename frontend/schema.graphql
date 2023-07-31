@@ -1,0 +1,1434 @@
+type AdminOperation {
+  remark: Remark
+}
+
+type Attendance {
+  updatedAt: String!
+  venueCode: String!
+  courseType: String!
+  enclosureType: String!
+  attendance: Int!
+}
+
+type BankerOdds {
+  combString: String!
+  oddsValue: String
+  order: Int
+  oddsNode: OddsNode!
+  willPay: String
+}
+
+type BettingRemark {
+  id: String!
+  startTime: String
+  endTime: String
+  immediate: Boolean
+  updateTime: String
+  categories: [RemarkCategory]
+  channels: [Channel]
+  contents: [Content]
+  locations: [String]
+}
+
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+
+type ChangeHistory {
+  id: ID!
+  type: String
+  time: String
+  raceNo: Int
+  runnerNo: String
+  horseName_en: String
+  horseName_ch: String
+  horseCode: String
+  scratchHorseName_en: String
+  scratchHorseName_ch: String
+  scratchHorseCode: String
+  jockeyName_en: String
+  jockeyName_ch: String
+  jockeyCode: String
+  handicapWeight: String
+  scrResvIndicator: String
+  raceMeeting: RaceMeeting!
+}
+
+enum Channel {
+  WEB
+  IOSBS
+  AOSBS
+  MB_WPB
+  MCJCI
+  MCJCA
+  IBUA
+  IBUT
+  MA_SBAI
+  MA_SBAA
+}
+
+enum ChannelType {
+  INTERACTIVESERVICE
+  VBT
+  TBAS
+  OFF_COURSE
+  ON_COURSE
+  ESC
+  EWALLET
+}
+
+type ChildPool {
+  id: String!
+  bTyp: String!
+}
+
+type CodeRaceClass {
+  raceClassCode: String!
+  lang: String!
+  description: String!
+  rtRange: String!
+}
+
+type CodeRaceCourse {
+  dispCode: String!
+  lang: String!
+  description: String!
+}
+
+type CodeRaceTrack {
+  raceTrackCode: String!
+  lang: String!
+  description: String!
+}
+
+type CodeReference {
+  venue: [CodeVenue]!
+  scrReason: [ScrReason]!
+  raceCourse: [CodeRaceCourse]!
+  raceTrack: [CodeRaceTrack]!
+  raceClass: [CodeRaceClass]!
+  lbw: [LBW]!
+  horseSex: [HorseSex]!
+  horseColour: [HorseColour]!
+  resIndex: [ResIndex]!
+  country: [CountryOfOrigin]!
+  raceGo: [RaceGo]!
+  trackFS: [TrackFS]!
+  raceDistance: [RaceDistance]!
+  gearCode: [GearCode]!
+  gearDisplayCode: [GearDisplayCode]!
+  intlGrpRaIndex: [InternationalGroundRaceIndex]!
+  jkType: [JkType]!
+  mtgTrkCode: [MeetingTrackCode]!
+  raceType: [RaceType]!
+  venueAttdCpy: [VenueAttdCpy]!
+  stableLoc: [StableLocation]!
+  trainingLoc: [TrainingLocation]!
+  trkWidth: [TrackWidth]!
+}
+
+type CodeVenue {
+  venueCode: String!
+  lang: String!
+  description: String!
+}
+
+type CodeWithDescription {
+  code: String!
+  description: String!
+}
+
+type Combination {
+  id: ID!
+  combId: String!
+  str: String!
+  status: CombinationStatus!
+  currentOdds: String
+  previousOdds: String
+  selections: [Selection]!
+  line: Line!
+  offerEarlySettlement: String!
+}
+
+enum CombinationStatus {
+  AVAILABLE
+  UNAVAILABLE
+  IRRATIONAL
+  ELIMINATED
+  PAYOUTSTOPPED
+  WIN
+  DRAW
+  LOSE
+  SUSPEND
+  REFUNDBEFORESUSPEND
+  REFUND
+  HALFWINHALFDRAW
+  HALFDRAWHALFLOSE
+  HALFDRAWHALFWIN
+  HALFLOSEHALFDRAW
+  SUSPENDED
+}
+
+type Content {
+  lang: String
+  content: String
+}
+
+type CountryOfOrigin {
+  code: String!
+  lang: String!
+  description: String
+  nationality: String!
+}
+
+type CWinSelection {
+  composite: String!
+  name_en: String
+  name_ch: String
+  starters: [Int]
+  pmPool: PmPool!
+}
+
+type Dividend {
+  winComb: String!
+  status: PmPoolDividendStatus!
+  seq: Int
+  div: String
+  type: String
+  guarantee: String
+  partial: Boolean
+  partialUnit: Int
+  pmPool: PmPool!
+}
+
+enum FBOddsType {
+  HAD
+  EHA
+  CHP
+  DHC
+  HFMP
+  FHA
+  EDC
+  TQL
+  HFM
+  DHCP
+  HHA
+  EHL
+  GPF
+  HDC
+  ECH
+  GPW
+  HIL
+  ECS
+  TPS
+  FHL
+  ENT
+  TSP
+  CHL
+  ETG
+  FTS
+  ETS
+  NTS
+  CRS
+  FCS
+  FGS
+  OOE
+  TTG
+  HFT
+  MSP
+  SGA
+  ALL
+}
+
+type FbPmPool {
+  id: ID!
+  status: PmPoolStatus
+  winningCombination: String
+  dividends: String
+  dividendType: String
+  consolationDividends: String
+  consolationInvestment: String
+  winningInvestment: String
+  jackpotGen: String
+  investment: String
+  jackpotAlc: String
+  lastUpdateTime: String
+  oddsType: FBOddsType!
+  leg: [FbPmPoolLeg]!
+  match: Match!
+}
+
+type FbPmPoolLeg {
+  no: Int!
+  match: Match!
+  fbPmPool: FbPmPool!
+}
+
+enum FBPoolsOddsType {
+  CHP
+  TQL
+  GPF
+  GPW
+  TPS
+  TSP
+}
+
+type FoPool {
+  id: ID!
+  oddsType: FBOddsType!
+  status: FoPoolStatus!
+  sportId: Int!
+  allUpEnabled: Boolean!
+  unitBet: String
+  statusUpdatedAt: String
+  conclAt: String
+  updateAt: String
+  instNo: Int!
+  multipleLines: Boolean!
+  expectedBusinessSellDateTime: String
+  expectedSuspendDateTime: String
+  inplay: Boolean!
+  sell: Sell
+  name_en: String
+  name_ch: String
+  lines(resultOnly: Boolean): [Line]!
+  closedLines: [Line]!
+  chpType: String
+  matchID: String
+  match: Match
+  tournamentID: String
+  tournament: Tournament
+}
+
+enum FoPoolStatus {
+  SELLINGSTARTED
+  SELLINGSTOPPED
+  HOLD
+  SUSPENDED
+  PAYOUTSTARTED
+  PAYOUTSTOPPED
+  PAYOUTHOLD
+  REFUND
+  REFUNDBEFORESUSPEND
+}
+
+type FPSBannerControl {
+  startTime: String
+  endTime: String
+  fpsBannerImageEN: FPSBannerImage
+  fpsBannerImageTC: FPSBannerImage
+  fpsEFTMessage: FpsEFTMessage
+  fpsSuspReminder: FpsSuspReminder
+}
+
+type FPSBannerImage {
+  imagePath: String
+  imageLoaderUrl: String
+  imageTarget: ImageTarget
+}
+
+type FpsEFTMessage {
+  name_en: String
+  name_ch: String
+}
+
+type FpsSuspReminder {
+  name_en: String
+  name_ch: String
+}
+
+type GearCode {
+  code: String!
+  lang: String!
+  description: String!
+}
+
+type GearDisplayCode {
+  gearCode: String!
+  displayCode: String!
+  lang: String!
+  description: String!
+}
+
+type GeneralBettingRemark {
+  remark: [BettingRemark]
+}
+
+type HammerReading {
+  sequenceNumber: Int!
+  readingTime: String!
+  reading: String!
+  raceMeeting: RaceMeeting!
+}
+
+type Horse {
+  id: String!
+  code: String
+  name_en: String
+  name_ch: String
+  runners: [Runner!]
+}
+
+type HorseColour {
+  code: String!
+  lang: String!
+  description: String!
+}
+
+type HorseSex {
+  code: String
+  lang: String!
+  genderDescription: String!
+}
+
+enum ImageTarget {
+  _self
+}
+
+type InternationalGroundRaceIndex {
+  intlGrpRaIndex: String!
+  lang: String!
+  description: String!
+}
+
+type JCBWParameterControl {
+  CWAButtonEnabled: Boolean
+  CWBButtonEnabled: Boolean
+  CWCButtonEnabled: Boolean
+  enableFeaturedMatches: Boolean
+  enableGlassBox: Boolean
+  mainlineOnTopDisplay: Boolean
+  FBAllUpShortcutMatchesExpanded: Boolean
+  fpsBannerDisplayEnabled: Boolean
+  liveTIconEnabled: Boolean
+  headToHeadIconEnabled: Boolean
+  earlySettlementEnabled: Boolean
+  earlySettlementIndicatorEnabled: Boolean
+  liveWebTvControl: [LiveWebTVControl]
+  fpsBannerControl: FPSBannerControl
+}
+
+type JkType {
+  jkTyp: String!
+}
+
+type Jockey {
+  id: String!
+  code: String!
+  name_en: String
+  name_ch: String
+  status: String
+  visitingIndex: String
+  dummyJkIndex: Boolean
+  runners: [Runner]!
+}
+
+type JockeyDetail {
+  id: String!
+  code: String!
+  name_en: String!
+  name_ch: String!
+  status: String!
+  visitingIndex: String!
+  llStat: JockeyStat
+  dhStat: JockeyStat
+}
+
+type JockeyStat {
+  numStarts: Int!
+  numFirst: Int!
+  numSecond: Int!
+  numThird: Int!
+  numFourth: Int!
+  numFifth: Int!
+  stakeWon: String!
+}
+
+type JudgeSign {
+  position: Int
+  recordTime: String
+  value_en: String
+  value_ch: String
+}
+
+type LBW {
+  code: String!
+  lang: String
+  description: String!
+}
+
+type Leg {
+  number: Int!
+  races: [Int!]!
+}
+
+type LegInfo {
+  legNo: Int!
+  raId: String!
+  raNo: Int!
+}
+
+type Line {
+  id: ID!
+  lineId: String!
+  status: LineStatus!
+  type: String
+  main: Boolean!
+  condition: String
+  combinations: [Combination]!
+  foPool: FoPool!
+}
+
+enum LineStatus {
+  AVAILABLE
+  SUSPENDED
+  PAYOUTSTARTED
+  PAYOUTSTOPPED
+  REFUND
+  REFUNDBEFORESUSPEND
+  READYTOSTARTSELL
+  NOTREADY
+}
+
+type LiveEventProvider {
+  id: ID!
+  code: String!
+  match: Match!
+}
+
+type LiveWebTVControl {
+  id: String!
+  footballMatchId: String!
+  liveWebTvEnabled: Boolean
+}
+
+enum LotteryDividendStatus {
+  Defined
+  DefinedWithOverflow
+}
+
+type LotteryDraw {
+  id: ID!
+  openDate: String!
+  closeDate: String!
+  year: String!
+  no: Int!
+  drawDate: String!
+  status: LotteryDrawStatus!
+  updatedAt: String!
+  snowballId: String
+  snowballCode: String
+  snowballName_en: String
+  snowballName_ch: String
+  drawResult: LotteryDrawResult
+  lotteryPool: LotteryPool
+}
+
+type LotteryDrawnNumber {
+  drawnNo: Int!
+  lastDrawnIn: Int!
+  totalNumber: Int!
+}
+
+type LotteryDrawResult {
+  id: String
+  updatedAt: String!
+  drawnNo: [Int]!
+  xDrawnNo: Int!
+  lotteryDraw: LotteryDraw!
+}
+
+enum LotteryDrawStatus {
+  Defined
+  Merged
+  Closed
+  Result
+}
+
+enum LotteryDrawType {
+  SnowBall
+  Normal
+  All
+}
+
+type LotteryPool {
+  id: ID!
+  status: LotteryPoolStatus
+  updatedAt: String
+  unitBet: Int
+  sell: Boolean
+  totalInvestment: String
+  jackpot: String
+  estimatedPrize: String
+  lotteryPrizes: [LotteryPrize]
+  lotteryDraw: LotteryDraw
+  lotteryDrawID: String
+}
+
+enum LotteryPoolStatus {
+  Defined
+  StartSell
+  StopSell
+  Closed
+  Result
+  Payout
+}
+
+type LotteryPrize {
+  type: Int!
+  status: LotteryDividendStatus!
+  dividend: String!
+  winningUnit: Float!
+  lotteryPool: LotteryPool!
+}
+
+type LotteryStat {
+  id: ID!
+  updatedAt: String!
+  year: Int!
+  no: Int!
+  drawDate: String!
+  drawnNumbers: [LotteryDrawnNumber]!
+}
+
+type Match {
+  id: ID!
+  frontEndId: String
+  matchDate: String!
+  matchNumber: String
+  matchDayOfWeek: String
+  countryId: String
+  continentId: String
+  kickOffTime: String
+  endTime: String
+  status: MatchStatus!
+  updateAt: String
+  statusUpdatedAt: String
+  sequence: String
+  homeTeam: Team!
+  awayTeam: Team!
+  tournament: Tournament
+  tournamentID: String
+  isInteractiveServiceAvailable: Boolean!
+  esIndicatorEnabled: Boolean
+  inplayDelay: Boolean!
+  venue: Venue
+  featureStartTime: String
+  featureMatchSequence: String
+  tvChannels: [TVChannel]!
+  liveEvents: [LiveEventProvider]!
+  results: [WageringResult]!
+  runningResult: RunningResult
+  runningResultExtra: RunningResult
+  foPools(fbOddsTypes: [FBOddsType]!, inplayOnly: Boolean, resultOnly: Boolean, lastOdds: Boolean): [FoPool]!
+  poolInfo: PoolInfo!
+  fbPmPools(oddsTypes: [FBOddsType]!): [FbPmPool]!
+  adminOperation: AdminOperation
+  isLast10HFMP: Boolean
+  isLast10DHCP: Boolean
+}
+
+type MatchNum {
+  total: Int!
+}
+
+enum MatchStatus {
+  NONE
+  DEFINED
+  PREEVENT
+  MATCHVOIDED
+  KICKEDOFF
+  RESULTVOIDED
+  MATCHENDED
+  FIRSTHALF
+  FIRSTHALFCOMPLETED
+  SECONDHALF
+  FULLTIMECOMPLETED
+  FIRSTHALFET
+  FIRSTHALFETCOMPLETED
+  SECONDHALFET
+  SECONDHALFETCOMPLETED
+  PENALTYKICK
+  PENALTYKICKCOMPLETED
+  MATCHSUSPENDED
+  INPLAYRESULTVOIDED
+  INPLAYMATCHENDED
+  PLANNING
+  READYTODEFINE
+  ABANDONED
+  RESULTENTERED
+  MATCHDELETED
+}
+
+enum MeetingStatus {
+  STARTED
+  DRAFT
+  INITIAL
+  ENTRY
+  DECLARED
+  DEFINED
+  CLOSED
+  ENTRY_ABANDON
+  ABANDON
+  ABANDON_PARTIAL
+}
+
+type MeetingTrackCode {
+  code: String!
+  lang: String!
+  description: String!
+}
+
+type MergedPoolSummary {
+  id: String!
+  childPl: [ChildPool]
+}
+
+type OddsNode {
+  id: String!
+  combString: String!
+  oddsValue: String
+  hotFavourite: Boolean
+  oddsDropValue: Float
+  order: Int
+  willPay: String
+  bankerOdds: [BankerOdds]!
+  pmPool: PmPool!
+}
+
+enum OddsType {
+  WIN
+  WINPre
+  PLA
+  PLAPre
+  PWIN0
+  PWIN1
+  QIN
+  QINPre
+  QINTop
+  QINBanker
+  QINTopPre
+  QINBankerPre
+  QPL
+  QPLPre
+  QPLTop
+  QPLBanker
+  QPLTopPre
+  QPLBankerPre
+  IWN
+  IWNPre
+  FCT
+  TCE
+  TCEInvest
+  TCETop
+  TCEBanker
+  QTT
+  QTTInvest
+  QTTTop
+  QTTBanker
+  TRI
+  TRIPre
+  TRITop
+  TRIBanker
+  FF
+  FFPre
+  FFTop
+  FFBanker
+  DBL
+  DBLPre
+  TBL
+  DT
+  TT
+  SixUP
+  CWA
+  CWB
+  CWC
+  JKC
+  TNC
+}
+
+type OperationControl {
+  bizDt: String
+  tos: String
+}
+
+input OrderBy {
+  field: String!
+  direction: OrderByDirection!
+}
+
+enum OrderByDirection {
+  ASC
+  DESC
+}
+
+type ParameterControl {
+  jcbwControl: JCBWParameterControl
+}
+
+type PenetrometerReading {
+  sequenceNumber: Int!
+  readingTime: String!
+  reading: String!
+  raceMeeting: RaceMeeting!
+}
+
+type PENoteControl {
+  JCBWButtonEnabled: Boolean
+  JCRWButtonEnabled: Boolean
+  IBUTButtonEnabled: Boolean
+  IBUAButtonEnabled: Boolean
+}
+
+type PmPool {
+  id: String!
+  poolId: String!
+  status: PmPoolStatus!
+  sellStatus: SellStatus!
+  investment: String
+  jackpot: String
+  estimatedDividend: String
+  lastUpdateTime: String
+  mergedPoolId: String
+  comingleStatus: String
+  guarantee: String
+  minTicketCost: Int
+  oddsType: OddsType!
+  leg: Leg!
+  name_en: String
+  name_ch: String
+  oddsNodes: [OddsNode]!
+  cWinSelections: [CWinSelection]!
+  dividends(officialOnly: Boolean): [Dividend]!
+  raceMeeting: RaceMeeting!
+  rebateRate: String
+}
+
+type PmPoolDefined {
+  id: String!
+  st: PmPoolStatus!
+  plStUpdAt: String!
+  bTyp: String!
+  untBet: Int!
+  aUEnbSt: Boolean!
+  leg: [LegInfo]
+  dtl: PoolSummary
+  mgPl: MergedPoolSummary
+  races: [Race!]!
+}
+
+enum PmPoolDividendStatus {
+  OFFICIAL
+  UNOFFICIAL
+}
+
+enum PmPoolStatus {
+  SELLINGSTARTED
+  SELLINGSTOPPED
+  HOLD
+  SUSPENDED
+  PAYOUTSTARTED
+  PAYOUTSTOPPED
+  PAYOUTHOLD
+  REFUND
+  REFUNDBEFORESUSPEND
+  INITIAL
+  DEFINED
+  REMOVED
+  START_SELL
+  STOP_SELL
+  CLOSED
+  CLOSED_AFTER_REFUND
+  PAYOUT
+  REFUND_BEFORE_CLOSE
+  REFUND_AFTER_CLOSE
+}
+
+type PoolInfo {
+  normalPools: [FBOddsType]!
+  inplayPools: [FBOddsType]!
+  sellingPools: [FBOddsType]!
+  payoutRefundPools: [FBOddsType]!
+  ntsInfo: [String]!
+  entInfo: [String]!
+  winComb: [String]!
+  chpType: Int
+  match: Match
+  tournament: Tournament
+}
+
+type PoolSummary {
+  plOrd: Int!
+  obSt: Int!
+}
+
+type PrizeMoney {
+  lvl: Int!
+  val: Float!
+}
+
+type Query {
+  generalBettingRemarks(channel: [Channel]!, category: [RemarkCategory]!): [BettingRemark]
+  peNotes: PENoteControl!
+  jcbwControl: JCBWParameterControl!
+  matches(fbOddsTypes: [FBOddsType]!, startDate: String, endDate: String, matchIds: [String], tournIds: [String], inplayOnly: Boolean, featuredMatchesOnly: Boolean, remarksOnly: Boolean, startIndex: Int, endIndex: Int, earlySettlementOnly: Boolean, frontEndIds: [String], showAllMatch: Boolean): [Match]
+  tournaments(fbOddsTypes: [FBOddsType]!, tournId: String, tournProfileId: String, subType: Int, earlySettlementOnly: Boolean, frontEndIds: [String]): [Tournament]
+  foPools(fbOddsTypes: [FBOddsType]!, startDate: String, endDate: String, matchIds: [String], tournIds: [String], inplayOnly: Boolean, featuredMatchesOnly: Boolean, remarksOnly: Boolean, startIndex: Int, endIndex: Int, earlySettlementOnly: Boolean, frontEndIds: [String]): [FoPool]
+  matchList: [Match]
+  tournamentList: [Tournament]
+  teamList: [Team]
+  matchResult(startDate: String, endDate: String, fbOddsTypes: [FBOddsType], matchId: String, startIndex: Int, endIndex: Int, teamId: String): [Match]
+  matchNumByDate(startDate: String, endDate: String, teamId: String): MatchNum
+  tournamentResult(oddsTypes: [FBOddsType]!, tournId: String, days: Int, tournDayFilter: TournDayFilter): [Tournament]
+  timeOffset: TimeOffset!
+  lotteryDraws(id: ID, lastNDraw: Int, startDate: String, endDate: String, drawType: LotteryDrawType): [LotteryDraw]
+  lotteryStats: [LotteryStat]
+  meetings(dates: [String!], meetingids: [String!], status: MeetingStatus): [RaceMeeting!]!
+  raceMeetings(id: ID, date: String, venueCode: String, status: MeetingStatus, startDate: String, endDate: String, all: Boolean, rebateCalOnly: Boolean): [RaceMeeting]
+  jockeys(id: ID): [Jockey]
+  trainers(id: ID): [Trainer]
+  horses(id: ID): [Horse]
+  jockeyStat: [JockeyDetail]
+  trainerStat: [TrainerDetail]
+  lastMeeting(localOnly: Boolean): RaceMeeting
+}
+
+type Race {
+  id: String!
+  no: Int
+  postTime: String
+  raceName_en: String
+  raceName_ch: String
+  raceResults: [RaceResult]!
+  venueCode: String
+  status: RaceStatus
+  distance: Int
+  numberOfDeclaredStarters: Int
+  stackPrize: Int
+  wageringFieldSize: Int
+  raceIndex: Int
+  ratingRange: String
+  go_en: String
+  go_ch: String
+  provisionalRaceNumber: String
+  secDivDisInd: String
+  secNo: Int
+  overseasInd: Boolean
+  raceCourse: RaceCourse
+  raceTrack: RaceTrack
+  raceType_en: String
+  raceType_ch: String
+  raceClass_en: String
+  raceClass_ch: String
+  prizeMoney: [PrizeMoney]
+  judgeSigns: [JudgeSign]!
+  country_en: String
+  country_ch: String
+  runners(orderBy: [OrderBy!]): [Runner]
+  sectionalTime: [SectionalTime]
+  winningMargin: [WinningMargin]
+  raceMeeting: RaceMeeting
+  ratingType: String
+}
+
+type RaceClass {
+  code: String!
+  description: String!
+}
+
+type RaceCourse {
+  code: String!
+  displayCode: String!
+  description_en: String
+  description_ch: String
+}
+
+type RaceDistance {
+  venueCode: String!
+  trackCode: String!
+  imperialRaceDistance: String
+  meetingType: String!
+  activityIndex: Int!
+  numSecTm: Int!
+}
+
+type RaceGo {
+  code: String!
+  lang: String!
+  description: String!
+  shortDescription: String!
+}
+
+type RaceGoing {
+  code: String!
+  sDes: String!
+  des: String!
+}
+
+type RaceMeeting {
+  id: String!
+  date: String!
+  venueCode: String!
+  status: MeetingStatus!
+  season: String
+  totalNumberOfRace: Int
+  currentNumberOfRace: Int
+  meetingNumber: Int
+  dateOfWeek: String
+  meetingType: String
+  meetingTrack_en: String
+  meetingTrack_ch: String
+  totalInvestment: String
+  rebateMinAmount: Int
+  stewards: [Steward]
+  attendents: [Attendance]
+  penetrometerReadings(filters: [String]): [PenetrometerReading]!
+  hammerReadings(filters: [String]): [HammerReading]!
+  changeHistories(filters: [String]): [ChangeHistory]!
+  races(id: String): [Race]!
+  pmPools(oddsTypes: [OddsType], filters: [String], raceNo: Int): [PmPool]!
+  foPools(oddsTypes: [OddsType], filters: [String]): [RacingFoPool]!
+  isActive: Boolean
+}
+
+type RaceProgramme {
+  przMoney: [PrizeMoney]
+  mtg: [RaceMeeting]
+}
+
+type RaceResult {
+  status: RaceResultStatus
+  raceTime: String
+  mgnInd: String
+  timeOff: String
+  finalPosUpdatedAt: String
+  race: Race
+}
+
+enum RaceResultStatus {
+  CAP
+  PARTIAL
+  FULLFIELDPLACING
+  WCFULLMARGIN
+  VOIDED
+  OFFICIAL
+}
+
+enum RaceStatus {
+  DRAFT
+  DECLARED
+  RESULT
+  NAMED
+  CLOSED
+  VOIDED
+}
+
+type RaceTrack {
+  code: String!
+  description_en: String
+  description_ch: String
+}
+
+type RaceType {
+  code: String!
+  lang: String!
+  description: String!
+}
+
+enum RacingFoCombinationStatus {
+  AVAILABLE
+  UNAVAILABLE
+  ELIMINATED
+  REFUNDBEFORESUSPEND
+  REFUND
+  PAYOUTSTARTED
+  PAYOUTHOLD
+  PAYOUTSTOPPED
+  WIN
+  DRAW
+  LOSE
+}
+
+type RacingFoPool {
+  id: ID!
+  poolId: String!
+  status: RacingFoPoolStatus!
+  instNo: String
+  oddsType: OddsType!
+  otherSelNo: Int
+  sellStatus: String
+  expStartDateTime: String
+  expStopDateTime: String
+  inplayUpTo: Int
+  raceStopSellNo: Int
+  raceStopSellStatus: String
+  includeRaces: [Int]!
+  excludeRaces: [Int]!
+  lastUpdateTime: String
+  selections: [RacingFoSelection]!
+  otherSelections: [RacingFoSelection]!
+  raceMeeting: RaceMeeting!
+  raceMeetingID: String
+}
+
+enum RacingFoPoolStatus {
+  SELLINGSTARTED
+  SELLINGSTOPPED
+  HOLD
+  SUSPENDED
+  PAYOUTSTARTED
+  PAYOUTHOLD
+  PAYOUTSTOPPED
+  REFUNDBEFORESUSPEND
+  REFUND
+}
+
+type RacingFoSelection {
+  id: ID!
+  number: Int
+  code: String!
+  name_en: String
+  name_ch: String
+  order: Int
+  lineId: String
+  combId: String
+  combStatus: RacingFoCombinationStatus
+  openOdds: String
+  prevOdds: String
+  currentOdds: String
+  scheduleRides: Int
+  remainingRides: Int
+  points: Float
+  results: [RacingFoSelectionResult]!
+  foPool: RacingFoPool!
+}
+
+type RacingFoSelectionResult {
+  raceNo: Int!
+  points: Float
+  remainingRides: Int
+  count1st: Int
+  dhRmk1st: Boolean
+  point1st: Float
+  count2nd: Int
+  dhRmk2nd: Boolean
+  point2nd: Float
+  count3rd: Int
+  dhRmk3rd: Boolean
+  point3rd: Float
+  count4th: Int
+  numerator4th: Int
+  denominator4th: Int
+  selection: RacingFoSelection!
+}
+
+type RacingNotesControl {
+  peNotes: PENoteControl
+}
+
+type Remark {
+  seq: Int!
+  typ: String!
+  updAt: String
+  cont: [RemarkContent]!
+}
+
+enum RemarkCategory {
+  HR
+  GL
+  FB
+  LY
+}
+
+type RemarkContent {
+  lang: String!
+  content: String!
+}
+
+type ResIndex {
+  code: String!
+  lang: String!
+  description: String!
+}
+
+type Runner {
+  id: String!
+  no: String
+  standbyNo: String
+  name_en: String
+  name_ch: String
+  age: Int
+  sex: String
+  color: String
+  status: RunnerStatus
+  barrierDrawNumber: String
+  handicapWeight: String
+  gearInfo: String
+  racingColorFileName: String
+  allowance: String
+  trainerPreference: String
+  trumpCard: Boolean
+  priority: Boolean
+  resCode: String
+  nqReaCode: String
+  isFirstRunInHK: Boolean
+  currentRating: String
+  lastRating: String
+  internationalRating: String
+  bestTime: String
+  currentWeight: String
+  lastWeight: String
+  last6run: String
+  country: String
+  isGriffin: Boolean
+  currentStableLocation: String
+  owner: String
+  impTyp: String
+  initialRatingOfSeason: String
+  sire: String
+  dam: String
+  sireOfDam: String
+  winOdds: String
+  finishPosition: String
+  margin: String
+  ibw: String
+  stakeWon: Float
+  saddleClothNo: String
+  sectionalTime: String
+  jockey: Jockey
+  trainer: Trainer
+  horse: Horse
+  finalPosition: Int
+  deadHeat: Boolean
+  race: Race!
+}
+
+type RunnerResult {
+  saddleClothNo: String!
+  finPos: String!
+  winOdds: String!
+  raceTime: String!
+  margin: String
+  lBW: CodeWithDescription
+  jkActOWgt: Int!
+  stkWon: Float!
+  resIdx: String!
+  finOrd: String!
+  secInfo: [SectionalInfo]
+}
+
+enum RunnerStatus {
+  Declared
+  Draft
+  DraftStandby
+  Ran
+  Scratched
+  ScratchedReserved
+  Standby
+}
+
+type RunningResult {
+  homeScore: Int!
+  awayScore: Int!
+  corner: Int!
+}
+
+type ScrReason {
+  scrReasonCode: String!
+  lang: String!
+  description: String
+}
+
+type SectionalInfo {
+  secNo: Int!
+  ruPos: String!
+  secTm: String!
+  lBW: CodeWithDescription
+}
+
+type SectionalTime {
+  sectionNo: String
+  sectionTime: String
+  selfClosing: Boolean
+  race: Race
+}
+
+type Selection {
+  id: ID!
+  selId: String
+  name_en: String
+  name_ch: String
+  str: String!
+  sequence: Int!
+  teamId: String
+  combination: Combination!
+}
+
+type Sell {
+  channel: ChannelType!
+  minBet: String!
+}
+
+enum SellStatus {
+  START_SELL
+  STOP_SELL
+}
+
+type StableLocation {
+  code: String!
+  lang: String!
+  description: String!
+}
+
+type Steward {
+  sequenceNumber: Int!
+  role: String!
+  name_en: String
+  name_ch: String
+}
+
+type Team {
+  id: ID!
+  code: String!
+  name_en: String!
+  name_ch: String!
+  countryId: String!
+  continentId: String!
+  match: Match!
+}
+
+type TimeOffset {
+  ts: String!
+  fb: Int!
+  rc: Int!
+  m6: Int!
+}
+
+type Token {
+  access_token: String!
+  scope: String!
+  token_type: String!
+  expires_in: String!
+}
+
+type Tournament {
+  id: ID!
+  nameProfileId: String!
+  frontEndId: String
+  code: String!
+  sequence: String
+  name_en: String!
+  name_ch: String!
+  isInteractiveServiceAvailable: Boolean!
+  foPools(fbOddsTypes: [FBOddsType]!, resultOnly: Boolean): [FoPool]!
+  poolInfo: PoolInfo!
+  updateAt: String
+}
+
+input TournDayFilter {
+  days: Int!
+  exceptionalTournIDs: [Int]!
+}
+
+type TrackFS {
+  venueCode: String!
+  trackCode: String!
+  raceCrs: String
+  meetingType: String!
+  distance: Int!
+  fs: Int!
+}
+
+type TrackWidth {
+  code: String!
+  lang: String!
+  description: String!
+}
+
+type Trainer {
+  id: String!
+  code: String!
+  name_en: String
+  name_ch: String
+  status: String
+  visitingIndex: String
+  runners: [Runner]!
+}
+
+type TrainerDetail {
+  id: String!
+  code: String!
+  name_en: String!
+  name_ch: String!
+  status: String!
+  visitingIndex: String!
+  llStat: TrainerStat
+  dhStat: TrainerStat
+}
+
+type TrainerStat {
+  numStarts: Int!
+  numFirst: Int!
+  numSecond: Int!
+  numThird: Int!
+  numFourth: Int!
+  numFifth: Int!
+  stakeWon: String!
+}
+
+type TrainingLocation {
+  code: String!
+  lang: String!
+  description: String!
+}
+
+type Translations {
+  enUs: String!
+  zhCn: String!
+  zhHk: String!
+}
+
+type TVChannel {
+  id: ID!
+  code: String!
+  type: Int!
+  name_en: String!
+  name_ch: String!
+  match: Match!
+}
+
+type Venue {
+  id: ID!
+  code: String!
+  countryId: String!
+  continentId: String!
+  enabled: Boolean!
+  name_en: String!
+  name_ch: String!
+  match: Match!
+}
+
+type VenueAttdCpy {
+  code: String!
+  mmbVal: Int!
+  pubVal: Int!
+  xBetVal: Int!
+}
+
+type WageringResult {
+  sequence: Int!
+  resultType: Int!
+  stageId: Int!
+  homeResult: Int!
+  awayResult: Int!
+  resultConfirmType: Int!
+  payoutConfirmed: Boolean!
+  match: Match!
+}
+
+type WinningMargin {
+  seqNo: String
+  lbw: String
+  race: Race
+}
