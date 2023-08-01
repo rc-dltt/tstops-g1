@@ -1,0 +1,9 @@
+subgraphs:
+  races:
+    routing_url: https://dltt-races-717a66b9ce08.herokuapp.com/graphql
+    schema:
+      subgraph_url: https://dltt-races-717a66b9ce08.herokuapp.com/graphql
+  matches:
+    routing_url: https://dltt-matches-a3f8f625791e.herokuapp.com/graphql
+    schema:
+      subgraph_url: https://dltt-matches-a3f8f625791e.herokuapp.com/graphql
