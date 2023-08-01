@@ -404,4 +404,4 @@ cors:
 
 You have completed this section
 
-[< prev](./1_4_securing_graphql_with_jwt.md) | [home](../readme.md) | [next >](./1_6_testing_with_postman.md)
+[< prev](./1_4_securing_graphql_with_jwt.md) | [home](../readme.md) | [next >](./1_6_setup_local_supergraph.md)

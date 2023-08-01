@@ -1,4 +1,4 @@
-# 1.6 Testing Your Graph with Postman
+# 1.7 Testing Your Graph with Postman
 
 In this lab section we are going to use postman to query a graph
 
@@ -25,4 +25,4 @@ query Races {
 
 You have completed this section
 
-[< prev](./1_5_2_query_supergraph.md) | [home](../readme.md)
+[< prev](./1_6_setup_local_supergraph.md) | [home](../readme.md)
