@@ -1,0 +1,16 @@
+{
+  "name": "gateway-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "compose": "rover supergraph compose --config ./supergraph.yaml > ./src/supergraph.graphql",
+    "start": "node ./src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/gateway": "^2.5.1",
+    "apollo-server": "^3.12.0"
+  }
+}
