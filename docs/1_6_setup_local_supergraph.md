@@ -145,6 +145,8 @@ Run docker compose and query the supergraph
 docker compose up
 ```
 
+![Apollo Gateway web UI](./img/1_6_apollo_gateway.png)
+
 ## Next
 
 You have completed this section
