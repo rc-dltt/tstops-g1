@@ -339,6 +339,108 @@ docker run --rm -p 4001:4001 -e PORT=4001 hkjc-demo-grapqh-server
 > Server is running at http://localhost:4001/
 ```
 
+## CodeGen
+
+We can improve our application by adding GraphQL code generation
+
+Create a new file `schema.graphql` in the `src` folder
+
+```graphql
+schema {
+    query: Query
+}
+
+type Query {
+  races: [Race]!
+  horses: [Horse]!
+}
+
+type Race {
+  id: ID!
+  no: Int
+  startTime: String!
+  venue: String!
+  horses: [Horse]!
+}
+
+type Horse {
+  id: ID!
+  name: String!
+  rank: Int
+}
+```
+
+add the `readFileSync` import in `index.ts` and assign `typeDefs` from `schema.graphql`
+
+```ts
+import { readFileSync } from "node:fs";
+...
+const typeDefs = readFileSync("./src/schema.graphql", "utf8");
+```
+
+Now we can install the following dev dependencies
+
+```bash
+npm install --save-dev @graphql-codegen/cli @graphql-codegen/typescript-resolvers @graphql-codegen/typescript
+```
+
+and add `codegen.ts` in the root folder of the project
+
+```ts
+import type { CodegenConfig } from "@graphql-codegen/cli";
+
+const config: CodegenConfig = {
+  schema: "./src/schema.graphql",
+  generates: {
+    "./src/resolvers-types.ts": {
+      config: {
+        useIndexSignature: true,
+      },
+      plugins: ["typescript", "typescript-resolvers"],
+    },
+  },
+};
+export default config;
+```
+
+this is going to generate statically typed resolvers from the schema
+
+Finally we add the codegen script in `package.json`
+
+```json
+  ...
+  "scripts": {
+    "generate": "graphql-codegen",
+    ...
+  },
+  ...
+```
+
+Running the following should create a new file named `resolvers-types.ts` in the `src` folder
+
+```bash
+npm run generate
+```
+
+Update the `resolvers.ts` file importing the generated `Resolvers`
+
+```ts
+import { Resolvers } from "./resolvers-types";
+...
+
+export const resolvers: Resolvers = {
+  ...
+}
+```
+
+Let's try to run the application and verify that everything works as usual
+
+```bash
+npm start
+
+> Server is running at http://localhost:4001/
+```
+
 ## Next
 
 You have completed this section
