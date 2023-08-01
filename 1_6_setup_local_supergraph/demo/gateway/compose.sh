@@ -1,1 +1,0 @@
-rover supergraph compose --config ./supergraph.yaml > ./src/supergraph.graphql

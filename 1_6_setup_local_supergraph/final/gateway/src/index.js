@@ -12,7 +12,7 @@ const server = new ApolloServer({
   gateway,
 });
 
-const PORT = process.env.PORT || 4003;
+const PORT = process.env.PORT || 4000;
 
 server.listen({ port: PORT }).then(({ url }) => {
   console.log(`Server ready at ${url}`);
