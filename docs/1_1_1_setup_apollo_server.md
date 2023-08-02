@@ -7,10 +7,8 @@ In this lab section we are going to create a simple graphQL server using Apollo
 The first step is to create a folder for our application
 
 ```bash
-export app_name=<your app folder name>
-
-mkdir $app_name
-cd $app_name
+mkdir demo
+cd demo
 ```
 
 Now that we have out app folder, let's initialize a new NodeJs application
@@ -109,36 +107,47 @@ npm start
 
 ## Schema
 
-Let's create a new `schema.ts` file and add the graphql schema we are going to use for this application:
+Let's create a new `schema.graphql` file and add the graphql schema we are going to use for this application:
 
-```ts
-export const typeDefs = `#graphql
+```graphql
+schema {
+    query: Query
+}
 
-  type Query {
-    races: [Race]!
-    horses: [Horse]!
-  }
+type Query {
+  users: [User!]!
+  currentUser: User
+  races: [Race]!
+  horses: [Horse]!
+}
 
-  type Race {
-    id: ID!
-    no: Int
-    startTime: String!
-    venue: String!
-    horses: [Horse]!
-  }
+type Race {
+  id: ID!
+  no: Int
+  startTime: String!
+  venue: String!
+  horses: [Horse!]!
+}
 
-  type Horse {
-    id: ID!
-    name: String!
-    rank: Int
-  }
+type Horse {
+  id: ID!
+  name: String!
+  rank: Int
+  race: Race
+}
 `;
 ```
 
 The domain model is very simple: a collection of races, each one having a set of racing horses.
 
+
 Now we can add our datasource. For this lab we are going to use a in memory list of Race and Horse objects as defined in our graph
 
+Let's install `notarealdb` to mock a database
+
+```bash
+npm install notarealdb
+```
 
 Let's create a data folder under `src`:
 
@@ -146,93 +155,154 @@ Let's create a data folder under `src`:
 mkdir data
 ```
 
-and two files: `horses.ts` and `races.ts`
+and the following json files: 
 
-```ts
-export const HORSES = [
-    {
-        id: "horse#1",
-        name: "Tornado",
-        rank: 11,
-    },
-    {
-        id: "horse#2",
-        name: "Roncinant",
-        rank: 99,
-    },
-    {
-        id: "horse#3",
-        name: "Harry Trotter",
-        rank: 54,
-    },
-    {
-        id: "horse#4",
-        name: "Pony Soprano",
-        rank: 14,
-    },
-    {
-        id: "horse#5",
-        name: "Neigh Sayer",
-        rank: 86,
-    },
-    {
-        id: "horse#6",
-        name: "Pony Montana",
-        rank: 77,
-    },
-];
-```
+`horses.json`
 
-```ts
-import { HORSES } from "./horses";
-
-export const RACES = [
+```json
+[
     {
-        id: "race#1",
-        no: 1001,
-        startTime: "2023-08-31T19:00:00",
-        venue: "Sha Tin Racecourse",
-        horses: HORSES.slice(0,3),
+        "id": "horse#1",
+        "name": "Tornado",
+        "rank": 11
     },
     {
-        id: "race#2",
-        no: 1002,
-        startTime: "2023-08-31T19:15:00",
-        venue: "Happy Valley Racecourse",
-        horses: HORSES.slice(3),
+        "id": "horse#2",
+        "name": "Roncinant",
+        "rank": 99
     },
-];
-```
-
-We can now write the resolvers which will just return out in memory collections.
-Let's add a new `resolvers.ts` file 
-
-```ts
-import { HORSES } from "./data/horses";
-import { RACES } from "./data/races";
-
-export const resolvers = {
-    Query: {
-        races: () => RACES,
-        horses: () => HORSES,
+    {
+        "id": "horse#3",
+        "name": "Harry Trotter",
+        "rank": 54
+    },
+    {
+        "id": "horse#4",
+        "name": "Pony Soprano",
+        "rank": 14
+    },
+    {
+        "id": "horse#5",
+        "name": "Neigh Sayer",
+        "rank": 86
+    },
+    {
+        "id": "horse#6",
+        "name": "Pony Montana",
+        "rank": 77
     }
+]
+```
+and `races.json`
+```json
+[
+  {
+    "id": "race#1",
+    "no": 1001,
+    "startTime": "2023-08-31T19:00:00",
+    "venue": "Sha Tin Racecourse",
+    "horses": ["horse#1", "horse#2", "horse#3"]
+  },
+  {
+    "id": "race#2",
+    "no": 1002,
+    "startTime": "2023-08-31T19:15:00",
+    "venue": "Happy Valley Racecourse",
+    "horses": ["horse#4", "horse#5", "horse#6"]
+  }
+]
+```
+
+Finally add a `db.ts` file to expose the db collections
+
+```ts
+import { DataStore } from "notarealdb";
+
+export const store = new DataStore("./dist/data");
+
+export const races = store.collection("races");
+
+export const horses = store.collection("horses");
+```
+
+For this to work at runtime we have to copy our data files in the `dist` folder. We are going to use the `copyfiles` npm package for this purpose
+
+```bash
+npm install copyfiles
+```
+
+and change our `scripts` section in `package.json` accordingly
+
+```json
+...
+  "scripts": {
+    "copy-data": "copyfiles -f ./src/data/*.json ./dist/data",
+    "compile": "tsc && npm run copy-data",
+    "start": "npm run compile && node ./dist/index.js"
+  },
+...
+```
+
+We should add our datasources in the context object.
+Let's create a new file `context.ts`
+
+```ts
+import { horses, races } from "./db";
+
+export const buildContext = async (req) => {
+  const dataSources = {
+    races,
+    horses,
+  };
+
+  return {
+    dataSources,
+  };
 };
 ```
 
-Finally we can create and initialize an instance of apollo server in `index.ts`.
-
-In order to do that, let's first add the following `import` directives at the top of our file
+We can now write the resolvers using our data sources.
+Let's add a new `resolvers.ts` file 
 
 ```ts
-import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+export const resolvers = {
+  Query: {
+    races: (_, __, { dataSources }) => {
+      return dataSources.races.list();
+    },
+    horses: (_, __, { dataSources }) => {
+      return dataSources.horses.list();
+    },
+  },
+  Race: {
+    horses: (parent, __, { dataSources }) => {
+      return dataSources.horses.list()
+        .filter(horse => horse.race === parent.id);
+    },
+  },
+  Horse: {
+    race: (parent, _, { dataSources }) => {
+      return dataSources.races.get(parent.race);
+    },
+  },
+};
 ```
 
-we need to import our schema and resolvers
+Note that we need to _resolve_ **Race.horses** objects for the `horses` query because in our db `horse.race` only returns a list of horse IDs but our schema requires a collection of **Horse** object.
+
+Similarly we need to _resolve_ **Horse.race**. 
+
+In both cases we can rely on the `parent` argument to filter the db collections
+
+
+Finally we can create and initialize an instance of apollo server in `index.ts`.
+
+Let's load the schema first:
 
 ```ts
-import { typeDefs } from "./schema";
-import { resolvers } from "./resolvers";
+import { readFileSync } from "node:fs";
+
+const typeDefs = readFileSync("./src/schema.graphql", "utf8");
 ```
 
 and then we can initialize and run the server instance
@@ -246,16 +316,59 @@ async function start() {
   const PORT = parseInt(process.env.PORT || "4001");
   const { url } = await startStandaloneServer(server, {
     listen: { port: PORT },
+    context: buildContext,
   });
   console.log(`Server is running at ${url}`);
 }
 
-ssstart();
+start();
+```
+
+For this to work we need a few imports: 
+
+```ts
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+```
+
+and our context and resolvers
+
+```ts
+import { buildContext } from "./context";
+import { resolvers } from "./resolvers";
+```
+
+the complete `index.ts` should look like this
+
+```ts
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { readFileSync } from "node:fs";
+
+import { buildContext } from "./context";
+import { resolvers } from "./resolvers";
+
+const typeDefs = readFileSync("./src/schema.graphql", "utf8");
+
+async function start() {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
+  const PORT = parseInt(process.env.PORT || "4001");
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: PORT },
+    context: buildContext,
+  });
+  console.log(`Server is running at ${url}`);
+}
+
+start();
 ```
 
 ## Querying the server
 
-The server app is ready and we can run it with
+The server app is ready and we can run
 
 ```bash
 npm start
@@ -272,12 +385,15 @@ and browsing to [http://localhost:4001/](http://localhost:4001/) we should see t
 You can build the query interactively, ideally something like this:
 
 ```graphql
-query Races {
+query GetRaces {
   races {
     id
     no
     startTime
     venue
+    horses {
+      name
+    }
   }
 }
 ```
@@ -292,13 +408,29 @@ Runing the query should return the list or races
         "id": "race#1",
         "no": 1001,
         "startTime": "2023-08-31T19:00:00",
-        "venue": "Sha Tin Racecourse"
+        "venue": "Sha Tin Racecourse",
+        "horses": [
+          {
+            "name": "Tornado"
+          },
+          {
+            "name": "Roncinant"
+          }
+        ]
       },
       {
         "id": "race#2",
         "no": 1002,
         "startTime": "2023-08-31T19:15:00",
-        "venue": "Happy Valley Racecourse"
+        "venue": "Happy Valley Racecourse",
+        "horses": [
+          {
+            "name": "Harry Trotter"
+          },
+          {
+            "name": "Pony Soprano"
+          }
+        ]
       }
     ]
   }
