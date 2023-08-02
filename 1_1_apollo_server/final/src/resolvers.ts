@@ -1,10 +1,21 @@
-import { Resolvers } from "./resolvers-types";
-import { HORSES } from "./data/horses";
-import { RACES } from "./data/races";
-
-export const resolvers: Resolvers = {
+export const resolvers = {
   Query: {
-    races: () => RACES,
-    horses: () => HORSES,
+    races: (_, __, { dataSources }) => {
+      return dataSources.races.list();
+    },
+    horses: (_, __, { dataSources }) => {
+      return dataSources.horses.list();
+    },
+  },
+  Race: {
+    horses: (parent, __, { dataSources }) => {
+      return dataSources.horses.list()
+        .filter(horse => horse.race === parent.id);
+    },
+  },
+  Horse: {
+    race: (parent, _, { dataSources }) => {
+      return dataSources.races.get(parent.race);
+    },
   },
 };
