@@ -1,21 +1,61 @@
-import { gql } from 'apollo-boost';
+import { gql } from 'graphql-tag';
 
-const getRaceByNo = gql`
-  query RaceByNo($no: Int!) {
-    races(no: $no) {
+const allRaceQuery = gql`
+  query races {
+    races{
       id
       no
       startTime
       venue
-      horses {
+    }
+  }
+`;
+
+const allHorseQuery = gql`
+  query horses {
+    horses {
         id
         name
         rank
       }
     }
-  }
 `;
 
+// const raceByNoQuery = gql`
+//   query RaceByNo($no: Int!) {
+//     races(no: $no) {
+//       id
+//       no
+//       startTime
+//       venue
+//       horses {
+//         id
+//         name
+//         rank
+//       }
+//     }
+//   }
+// `;
+
+// const loginQuery = gql`
+//   query loginQuery($no: Int!) {
+//     races(no: $no) {
+//       id
+//       no
+//       startTime
+//       venue
+//       horses {
+//         id
+//         name
+//         rank
+//       }
+//     }
+//   }
+// `;
+
 export {
-    getRaceByNo
+  allRaceQuery,
+  allHorseQuery,
+  //raceByNoQuery,
+  //loginQuery
 }
