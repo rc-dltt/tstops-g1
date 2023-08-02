@@ -9,6 +9,7 @@ type Query {
 }
 
 type Mutation {
+  login(email: String!, password: String!): String
   addRace(command: AddRaceInput!): Race!
   addHorse(command: AddHorseInput!): Horse!
   enrollHorse(command: EnrollHorseInput!): Horse!
