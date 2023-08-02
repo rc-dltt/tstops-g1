@@ -1,0 +1,36 @@
+[
+    {
+        "id": "horse#1",
+        "name": "Tornado",
+        "rank": 11,
+        "race": "race#1"
+    },
+    {
+        "id": "horse#2",
+        "name": "Roncinant",
+        "rank": 99,
+        "race": "race#1"
+    },
+    {
+        "id": "horse#3",
+        "name": "Harry Trotter",
+        "rank": 54,
+        "race": "race#2"
+    },
+    {
+        "id": "horse#4",
+        "name": "Pony Soprano",
+        "rank": 14,
+        "race": "race#2"
+    },
+    {
+        "id": "horse#5",
+        "name": "Neigh Sayer",
+        "rank": 86
+    },
+    {
+        "id": "horse#6",
+        "name": "Pony Montana",
+        "rank": 77
+    }
+]

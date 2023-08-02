@@ -1,0 +1,46 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  races: [Race]!
+  horses: [Horse]!
+}
+
+type Mutation {
+  addRace(command: AddRaceInput!): Race!
+  addHorse(command: AddHorseInput!): Horse!
+  enrollHorse(command: EnrollHorseInput!): Horse!
+}
+
+input AddRaceInput {
+  no: Int
+  startTime: String!
+  venue: String
+}
+
+input AddHorseInput {
+  name: String!
+  rank: Int
+}
+
+input EnrollHorseInput {
+  race: ID!
+  horse: ID!
+}
+
+type Race {
+  id: ID!
+  no: Int
+  startTime: String!
+  venue: String!
+  horses: [Horse!]!
+}
+
+type Horse {
+  id: ID!
+  name: String!
+  rank: Int
+  race: Race
+}
