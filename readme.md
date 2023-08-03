@@ -2,6 +2,9 @@
 
 Welcome to the first graphQL training lab
 
+[https://github.com/rc-dltt/tstops-g1.git](https://github.com/rc-dltt/tstops-g1.git)
+
+
 ## What 
 
 What are we going to cover today?
