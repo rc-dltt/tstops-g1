@@ -1,5 +1,17 @@
 import { gql } from 'graphql-tag';
 
+// const loginMutation = gql`
+// mutation login(
+//   $email: String!,
+//   $password: String!
+//   ) {
+//   login(
+//     email: $username,
+//     password: $password
+//     )
+// }
+// `;
+
 const addRaceMutation = gql`
   mutation addRace(
     $command: AddRaceInput!
@@ -38,6 +50,7 @@ const enrollHorseMutation = gql`
 `;
 
 export {
+  // loginMutation,
   addRaceMutation,
   addHorseMutation,
   enrollHorseMutation

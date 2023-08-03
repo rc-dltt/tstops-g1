@@ -11,8 +11,9 @@ import {
     Button
 } from 'react-native';
 import { DataTable } from 'react-native-paper';
-import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     allRaceQuery,
     allHorseQuery
@@ -20,7 +21,8 @@ import {
 import {
     addRaceMutation,
     addHorseMutation,
-    enrollHorseMutation
+    enrollHorseMutation,
+    // loginMutation
 } from './mutation';
 
 const LandingPage = () => {
@@ -42,11 +44,22 @@ const LandingPage = () => {
 
     ///////////////////////////// Mutations /////////////////////////////////
 
+    // const [login] = useMutation(loginMutation, {
+    //     onCompleted: ({login}) => {
+    //         AsyncStorage.setItem('token', login);
+    //         setAuth(true);
+    //     },
+    //     onError: (err) => {
+    //         setAuth(false);
+    //     }
+    // });
     const [addRace] = useMutation(addRaceMutation);
     const [addHorse] = useMutation(addHorseMutation);
     const [enrollHorse] = useMutation(enrollHorseMutation);
 
     // Mutation Init States
+    // const [auth, setAuth] = useState(false);
+
     const [raceNoInput, setRaceNoInput] = useState('');
     const [raceTimeInput, setRaceTimeInput] = useState('');
     const [raceVenueInput, setRaceVenueInput] = useState('');
@@ -112,10 +125,10 @@ const LandingPage = () => {
 
     // Add Horse Input Change
     const handleHorseNameInputChange = (input) => {
-        setRaceNoInput(input);
+        setHorseNameInput(input);
     };
     const handleHorseRankInputChange = (input) => {
-        setRaceTimeInput(input);
+        setHorseRankInput(input);
     };
 
     // Eroll Horse Input Change
@@ -134,7 +147,7 @@ const LandingPage = () => {
         setAddHorseSuccess(false)
     };
     const enrollHorseRefetchSuccess = () => {
-        setAddHorseSuccess(false)
+        setEnrollHorseSuccess(false)
     };
 
     ///////////////////////////// Event Submit Handlers ///////////////////////////////////
@@ -297,7 +310,7 @@ const LandingPage = () => {
                     onChangeText={handleRaceNoInputChange}
                     value={raceNoInput}
                     placeholder="Enter Race Number"
-                    keyboardType="number-pad"
+                    keyboardType="default"
                 />
                 <TextInput
                     style={styles.input}
@@ -336,7 +349,7 @@ const LandingPage = () => {
                     onChangeText={handleHorseRankInputChange}
                     value={horseRankInput}
                     placeholder="Enter Horse Rank"
-                    keyboardType="number-pad"
+                    keyboardType="default"
                 />
                 <Button title="Submit" onPress={handleSubmitAddHorse} />
 
