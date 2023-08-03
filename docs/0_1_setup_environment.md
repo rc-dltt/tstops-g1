@@ -100,4 +100,4 @@ brew install --cask postman
 
 Ready to begin
 
-[home](../readme.md) | [next](./1_1_setup_apollo_server.md)
+[home](../readme.md) | [next](./1_1_1_setup_apollo_server.md)

@@ -7,4 +7,4 @@
 
 You have completed this section
 
-[< prev](./1_1_setup_apollo_server.md) | [home](../readme.md) | [next >](./1_3_queries_and_mutations.md)
+[< prev](./1_1_2_codegen.md) | [home](../readme.md) | [next >](./1_3_queries_and_mutations.md)
