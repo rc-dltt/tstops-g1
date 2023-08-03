@@ -24,26 +24,29 @@ import {
 } from './mutation';
 
 const LandingPage = () => {
-    //Theme
+
+    // Theme
     const isDarkMode = useColorScheme() === 'dark';
     const backgroundStyle = {
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     };
 
     ////////////////////////////// Queries //////////////////////////////////
+
     const { loading: raceDataLoading, error: raceDataError, data: raceData, refetch: refetchRaces } = useQuery(allRaceQuery);
     const { loading: horseDataLoading, error: horseDataError, data: horseData, refetch: refetchHorses } = useQuery(allHorseQuery);
 
-    //Query Init States
+    // Query Init States
     const [raceDataResult, setRaceDataResult] = useState([]);
     const [horseDataResult, setHorseDataResult] = useState([]);
 
     ///////////////////////////// Mutations /////////////////////////////////
+
     const [addRace] = useMutation(addRaceMutation);
     const [addHorse] = useMutation(addHorseMutation);
     const [enrollHorse] = useMutation(enrollHorseMutation);
 
-    //Mutation Init States
+    // Mutation Init States
     const [raceNoInput, setRaceNoInput] = useState('');
     const [raceTimeInput, setRaceTimeInput] = useState('');
     const [raceVenueInput, setRaceVenueInput] = useState('');
@@ -59,14 +62,14 @@ const LandingPage = () => {
 
     //////////////////////////////// Use Effects //////////////////////////////////
 
-    //All Race
+    // All Race
     useEffect(() => {
         if (!raceDataLoading && raceData.races.length > 0) {
             setRaceDataResult(raceData.races);
         }
     }, [raceData]);
 
-    //All Race Refetch
+    // All Race Refetch
     useEffect(() => {
         if (addRaceSuccess || enrollHorseSuccess) {
             refetchRaces();
@@ -79,14 +82,14 @@ const LandingPage = () => {
         }
     }, [addRaceSuccess, enrollHorseSuccess]);
 
-    //All Horse
+    // All Horse
     useEffect(() => {
         if (!horseDataLoading && horseData.horses.length > 0) {
             setHorseDataResult(horseData.horses);
         }
     }, [horseData]);
 
-    //All Horse Refetch
+    // All Horse Refetch
     useEffect(() => {
         if (addHorseSuccess) {
             refetchHorses();
@@ -96,6 +99,7 @@ const LandingPage = () => {
 
     //////////////////////////////// Event Handlers //////////////////////////////////
 
+    // Add Race Input Change
     const handleRaceNoInputChange = (input) => {
         setRaceNoInput(input);
     };
@@ -106,6 +110,7 @@ const LandingPage = () => {
         setRaceVenueInput(input);
     };
 
+    // Add Horse Input Change
     const handleHorseNameInputChange = (input) => {
         setRaceNoInput(input);
     };
@@ -113,27 +118,26 @@ const LandingPage = () => {
         setRaceTimeInput(input);
     };
 
+    // Eroll Horse Input Change
     const handleRaceIdInputChange = (input) => {
         setRaceIdInput(input);
     };
-
     const handleHorseIdInputChange = (input) => {
         setHorseIdInput(input);
     };
 
+    // Data Refetch
     const addRaceRefetchSuccess = () => {
         setAddRaceSuccess(false)
     };
-
     const addHorseRefetchSuccess = () => {
         setAddHorseSuccess(false)
     };
-
     const enrollHorseRefetchSuccess = () => {
         setAddHorseSuccess(false)
     };
 
-    ///////////////////////////// Submit Handlers ///////////////////////////////////
+    ///////////////////////////// Event Submit Handlers ///////////////////////////////////
 
     // Add Race
     const handleSubmitAddRace = () => {
@@ -192,7 +196,7 @@ const LandingPage = () => {
 
     ///////////////////////////// Table Component ////////////////////////////////////////
 
-    //Races Query
+    // Races Query
     const TableRaces = () => {
         return (
             <DataTable>
@@ -219,7 +223,7 @@ const LandingPage = () => {
         );
     };
 
-    //Horses Query
+    // Horses Query
     const TableHorses = () => {
         return (
             <DataTable>
@@ -254,6 +258,9 @@ const LandingPage = () => {
             <ScrollView
                 contentInsetAdjustmentBehavior="automatic"
                 style={backgroundStyle}>
+
+                {/* Query - All Races */}
+
                 <View
                     style={{
                         backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -263,6 +270,9 @@ const LandingPage = () => {
                     </Section>
                 </View>
                 <TableRaces />
+
+                {/* Query - All Horses */}
+
                 <View
                     style={{
                         backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -272,6 +282,9 @@ const LandingPage = () => {
                     </Section>
                 </View>
                 <TableHorses />
+
+                {/* Mutation - Add Race */}
+
                 <View style={{
                     backgroundColor: isDarkMode ? Colors.black : Colors.white,
                 }}>
@@ -301,6 +314,9 @@ const LandingPage = () => {
                     keyboardType="default"
                 />
                 <Button title="Submit" onPress={handleSubmitAddRace} />
+
+                {/* Mutation - Add Horse */}
+
                 <View style={{
                     backgroundColor: isDarkMode ? Colors.black : Colors.white,
                 }}>
@@ -323,6 +339,8 @@ const LandingPage = () => {
                     keyboardType="number-pad"
                 />
                 <Button title="Submit" onPress={handleSubmitAddHorse} />
+
+                {/* Mutation - Enroll Horse */}
 
                 <View style={{
                     backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -351,6 +369,8 @@ const LandingPage = () => {
     );
 };
 
+// Section Component
+
 const Section = (props) => {
     return (
         <View style={styles.sectionContainer}>
@@ -376,7 +396,8 @@ const Section = (props) => {
     );
 };
 
-// Styling
+// Styling - CSS
+
 const styles = StyleSheet.create({
     input: {
         height: 40,
@@ -396,10 +417,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontSize: 18,
         fontWeight: '400',
-    },
-    highlight: {
-        fontWeight: '700',
-    },
+    }
 });
 
 export default LandingPage;
