@@ -13,7 +13,7 @@ import {
 import { DataTable } from 'react-native-paper';
 import { useQuery, useMutation } from '@apollo/client';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     allRaceQuery,
     allHorseQuery
@@ -22,7 +22,7 @@ import {
     addRaceMutation,
     addHorseMutation,
     enrollHorseMutation,
-    // loginMutation
+    loginMutation
 } from './mutation';
 
 const LandingPage = () => {
@@ -35,8 +35,8 @@ const LandingPage = () => {
 
     ////////////////////////////// Queries //////////////////////////////////
 
-    const { loading: raceDataLoading, error: raceDataError, data: raceData, refetch: refetchRaces } = useQuery(allRaceQuery);
-    const { loading: horseDataLoading, error: horseDataError, data: horseData, refetch: refetchHorses } = useQuery(allHorseQuery);
+    const { loading: raceDataLoading, data: raceData, refetch: refetchRaces } = useQuery(allRaceQuery);
+    const { loading: horseDataLoading, data: horseData, refetch: refetchHorses } = useQuery(allHorseQuery);
 
     // Query Init States
     const [raceDataResult, setRaceDataResult] = useState([]);
@@ -44,21 +44,15 @@ const LandingPage = () => {
 
     ///////////////////////////// Mutations /////////////////////////////////
 
-    // const [login] = useMutation(loginMutation, {
-    //     onCompleted: ({login}) => {
-    //         AsyncStorage.setItem('token', login);
-    //         setAuth(true);
-    //     },
-    //     onError: (err) => {
-    //         setAuth(false);
-    //     }
-    // });
+    const [login, {data}] = useMutation(loginMutation);
     const [addRace] = useMutation(addRaceMutation);
     const [addHorse] = useMutation(addHorseMutation);
     const [enrollHorse] = useMutation(enrollHorseMutation);
 
     // Mutation Init States
-    // const [auth, setAuth] = useState(false);
+    const [emailInput, setEmailInput] = useState('johndoe@email.com');
+    const [passwordInput, setPasswordInput] = useState('pAsSWoRd!');
+    const [loginSuccess, setLoginSuccess] = useState(false);
 
     const [raceNoInput, setRaceNoInput] = useState('');
     const [raceTimeInput, setRaceTimeInput] = useState('');
@@ -74,17 +68,26 @@ const LandingPage = () => {
     const [enrollHorseSuccess, setEnrollHorseSuccess] = useState(false);
 
     //////////////////////////////// Use Effects //////////////////////////////////
+    // Login - Token
+    useEffect(() => {
+        if (data?.login) {
+            AsyncStorage.setItem('token', data.login);
+            setLoginSuccess(true);
+        } else {
+            setLoginSuccess(false);
+        }
+      }, [data]);
 
     // All Race
     useEffect(() => {
-        if (!raceDataLoading && raceData.races.length > 0) {
+        if (!raceDataLoading && raceData && raceData.races.length > 0) {
             setRaceDataResult(raceData.races);
         }
     }, [raceData]);
 
     // All Race Refetch
     useEffect(() => {
-        if (addRaceSuccess || enrollHorseSuccess) {
+        if (addRaceSuccess || enrollHorseSuccess || loginSuccess) {
             refetchRaces();
             if (addRaceSuccess) {
                 addRaceRefetchSuccess();
@@ -97,20 +100,28 @@ const LandingPage = () => {
 
     // All Horse
     useEffect(() => {
-        if (!horseDataLoading && horseData.horses.length > 0) {
+        if (!horseDataLoading && horseData && horseData.horses.length > 0) {
             setHorseDataResult(horseData.horses);
         }
     }, [horseData]);
 
     // All Horse Refetch
     useEffect(() => {
-        if (addHorseSuccess) {
+        if (addHorseSuccess || loginSuccess) {
             refetchHorses();
             addHorseRefetchSuccess();
         }
     }, [addHorseSuccess]);
 
     //////////////////////////////// Event Handlers //////////////////////////////////
+
+    // Login Input Change
+    const handleEmailInputChange = (input) => {
+        setEmailInput(input);
+    };
+    const handlePasswordInputChange = (input) => {
+        setPasswordInput(input);
+    };
 
     // Add Race Input Change
     const handleRaceNoInputChange = (input) => {
@@ -152,8 +163,24 @@ const LandingPage = () => {
 
     ///////////////////////////// Event Submit Handlers ///////////////////////////////////
 
+    // Login
+    const handleSubmitLogin = (e) => {
+        e.preventDefault();
+        if (emailInput !== "" && passwordInput !== "") {
+            login({
+                variables: {
+                    email: emailInput,
+                    password: passwordInput
+                }
+            })
+        } else {
+            return
+        }
+    };
+
     // Add Race
-    const handleSubmitAddRace = () => {
+    const handleSubmitAddRace = (e) => {
+        e.preventDefault();
         if (raceNoInput !== "" && raceTimeInput !== "" && raceVenueInput !== "") {
             addRace({
                 variables: {
@@ -171,7 +198,8 @@ const LandingPage = () => {
     };
 
     // Add Horse
-    const handleSubmitAddHorse = () => {
+    const handleSubmitAddHorse = (e) => {
+        e.preventDefault();
         if (horseNameInput !== "" && horseRankInput !== "") {
             addHorse({
                 variables: {
@@ -188,7 +216,8 @@ const LandingPage = () => {
     };
 
     // Enroll Horse
-    const handleSubmitEnrollHorse = () => {
+    const handleSubmitEnrollHorse = (e) => {
+        e.preventDefault();
         if (raceIdInput !== "" && horseIdInput !== "") {
             enrollHorse({
                 variables: {
@@ -204,9 +233,6 @@ const LandingPage = () => {
         }
     };
 
-    // if (raceDataLoading) return <Text>Loading...</Text>;
-    // if (raceDataError) return <Text>Error </Text>;
-
     ///////////////////////////// Table Component ////////////////////////////////////////
 
     // Races Query
@@ -220,10 +246,10 @@ const LandingPage = () => {
                     <DataTable.Title >Venue</DataTable.Title>
                 </DataTable.Header>
 
-                {raceDataResult.length > 0 ? (
-                    raceDataResult.map((item) => {
+                {loginSuccess && raceDataResult.length > 0 ? (
+                    raceDataResult.map((item, i) => {
                         return (
-                            <DataTable.Row key={item.key}>
+                            <DataTable.Row key={i}>
                                 <DataTable.Cell>{item.id}</DataTable.Cell>
                                 <DataTable.Cell>{item.no}</DataTable.Cell>
                                 <DataTable.Cell >{item.startTime}</DataTable.Cell>
@@ -245,10 +271,10 @@ const LandingPage = () => {
                     <DataTable.Title >Horse Name</DataTable.Title>
                     <DataTable.Title >Horse Rank</DataTable.Title>
                 </DataTable.Header>
-                {horseDataResult.length > 0 ? (
-                    horseDataResult.map((item) => {
+                {loginSuccess && horseDataResult.length > 0 ? (
+                    horseDataResult.map((item, i) => {
                         return (
-                            <DataTable.Row key={item.key}>
+                            <DataTable.Row key={i}>
                                 <DataTable.Cell>{item.id}</DataTable.Cell>
                                 <DataTable.Cell>{item.name}</DataTable.Cell>
                                 <DataTable.Cell >{item.rank}</DataTable.Cell>
@@ -272,8 +298,46 @@ const LandingPage = () => {
                 contentInsetAdjustmentBehavior="automatic"
                 style={backgroundStyle}>
 
-                {/* Query - All Races */}
+                {/* Login - JWT */}
 
+                <View style={{
+                    backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                }}>
+                    <Section title="Login - JWT" isDarkMode={isDarkMode}>
+                        Input Login Email and Password to Login.
+                    </Section>
+                </View>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={handleEmailInputChange}
+                    value={emailInput}
+                    placeholder="Enter Login Email"
+                    keyboardType="default"
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={handlePasswordInputChange}
+                    value={passwordInput}
+                    placeholder="Enter Login Password"
+                    keyboardType="default"
+                />
+                <Button title="Submit" onPress={handleSubmitLogin} />
+                <View style={{
+                    backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                }}>
+                    {loginSuccess ? (
+                        <Text>
+                            Login Success
+                        </Text>
+                    ) : (
+                        <Text>
+                            Login Unsuccess
+                        </Text>
+                    )
+                    }
+                </View>
+
+                {/* Query - All Races */}
                 <View
                     style={{
                         backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -328,7 +392,7 @@ const LandingPage = () => {
                 />
                 <Button title="Submit" onPress={handleSubmitAddRace} />
 
-                {/* Mutation - Add Horse */}
+                 {/* Mutation - Add Horse */}
 
                 <View style={{
                     backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -353,7 +417,7 @@ const LandingPage = () => {
                 />
                 <Button title="Submit" onPress={handleSubmitAddHorse} />
 
-                {/* Mutation - Enroll Horse */}
+                 {/* Mutation - Enroll Horse */}
 
                 <View style={{
                     backgroundColor: isDarkMode ? Colors.black : Colors.white,
