@@ -15,51 +15,69 @@ import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import {
     allRaceQuery,
-    allHorseQuery,
-    //raceByNoQuery,
-    //loginQuery
+    allHorseQuery
 } from './query';
+import {
+    addRaceMutation,
+    addHorseMutation,
+    enrollHorseMutation
+} from './mutation';
 
 const LandingPage = () => {
+    //Theme
     const isDarkMode = useColorScheme() === 'dark';
     const backgroundStyle = {
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     };
 
-    //Query States
-    const [raceNo, setRaceNo] = useState('');
+    ////////////////////////////// Queries //////////////////////////////////
+    const { loading: raceDataLoading, error: raceDataError, data: raceData, refetch: refetchRaces } = useQuery(allRaceQuery);
+    const { loading: horseDataLoading, error: horseDataError, data: horseData, refetch: refetchHorses } = useQuery(allHorseQuery);
+
+    //Query Init States
     const [raceDataResult, setRaceDataResult] = useState([]);
     const [horseDataResult, setHorseDataResult] = useState([]);
 
-    //Mutation States
+    ///////////////////////////// Mutations /////////////////////////////////
+    const [addRace] = useMutation(addRaceMutation);
+    const [addHorse] = useMutation(addHorseMutation);
+    const [enrollHorse] = useMutation(enrollHorseMutation);
+
+    //Mutation Init States
     const [raceNoInput, setRaceNoInput] = useState('');
     const [raceTimeInput, setRaceTimeInput] = useState('');
     const [raceVenueInput, setRaceVenueInput] = useState('');
-    // const [addHorse, setAddHorse] = useState([]);
-    // const [enrollHorse, setEnrollHorse] = useState([]);
-    // const [loginDetails, setLoginDetails] = useQuery([]);
+    const [addRaceSuccess, setAddRaceSuccess] = useState(false);
 
-    //Event States
-    const [submitAddRace, setSubmitAddRace] = useState(false);
+    const [horseNameInput, setHorseNameInput] = useState('');
+    const [horseRankInput, setHorseRankInput] = useState('');
+    const [addHorseSuccess, setAddHorseSuccess] = useState(false);
 
-    //Queries
-    const { loading: raceDataLoading, error: raceDataError, data: raceData } = useQuery(allRaceQuery);
-    const { loading: horseDataLoading, error: horseDataError, data: horseData } = useQuery(allHorseQuery);
-    // const { raceDataLoading, raceDataError, raceData } = useLazyQuery(getRaceByNo, {
-    //     variables: { no: parseInt(raceNo) }, skip: !buttonPressed
-    // });
+    const [raceIdInput, setRaceIdInput] = useState('');
+    const [horseIdInput, setHorseIdInput] = useState('');
+    const [enrollHorseSuccess, setEnrollHorseSuccess] = useState(false);
 
-    //Mutations
-    // const [addRace, { addRaceLoading, addRaceError, addRaceData }] = useMutation(addRaceMutation);
+    //////////////////////////////// Use Effects //////////////////////////////////
 
-    //Use Effects
     //All Race
     useEffect(() => {
         if (!raceDataLoading && raceData.races.length > 0) {
-        setRaceDataResult(raceData.races);
+            setRaceDataResult(raceData.races);
         }
-        
     }, [raceData]);
+
+    //All Race Refetch
+    useEffect(() => {
+        if (addRaceSuccess || enrollHorseSuccess) {
+            refetchRaces();
+            if (addRaceSuccess) {
+                addRaceRefetchSuccess();
+            }
+            if (enrollHorseSuccess) {
+                enrollHorseRefetchSuccess();
+            }
+        }
+    }, [addRaceSuccess, enrollHorseSuccess]);
 
     //All Horse
     useEffect(() => {
@@ -68,72 +86,164 @@ const LandingPage = () => {
         }
     }, [horseData]);
 
-    // if (raceDataLoading) return <Text>Loading...</Text>;
-    // if (raceDataError) return <Text>Error </Text>;
+    //All Horse Refetch
+    useEffect(() => {
+        if (addHorseSuccess) {
+            refetchHorses();
+            addHorseRefetchSuccess();
+        }
+    }, [addHorseSuccess]);
 
-    //Event Handlers
-    // const handleRaceNoChange = (text) => {
-    //     setRaceNo(text);
-    // };
+    //////////////////////////////// Event Handlers //////////////////////////////////
+
     const handleRaceNoInputChange = (input) => {
         setRaceNoInput(input);
     };
     const handleRaceTimeInputChange = (input) => {
-        setRaceNoInput(input);
+        setRaceTimeInput(input);
     };
     const handleRaceVenueInputChange = (input) => {
+        setRaceVenueInput(input);
+    };
+
+    const handleHorseNameInputChange = (input) => {
         setRaceNoInput(input);
     };
-
-    const handleSubmitAddRace = () => {
-        addRace({ variables: { no: raceNoInput, startTime: raceTimeInput, venue: raceVenueInput } })
-        // setSubmitAddRace(true);
+    const handleHorseRankInputChange = (input) => {
+        setRaceTimeInput(input);
     };
 
-    //Table Component - Races Query
+    const handleRaceIdInputChange = (input) => {
+        setRaceIdInput(input);
+    };
+
+    const handleHorseIdInputChange = (input) => {
+        setHorseIdInput(input);
+    };
+
+    const addRaceRefetchSuccess = () => {
+        setAddRaceSuccess(false)
+    };
+
+    const addHorseRefetchSuccess = () => {
+        setAddHorseSuccess(false)
+    };
+
+    const enrollHorseRefetchSuccess = () => {
+        setAddHorseSuccess(false)
+    };
+
+    ///////////////////////////// Submit Handlers ///////////////////////////////////
+
+    // Add Race
+    const handleSubmitAddRace = () => {
+        if (raceNoInput !== "" && raceTimeInput !== "" && raceVenueInput !== "") {
+            addRace({
+                variables: {
+                    command: {
+                        no: Number(raceNoInput),
+                        startTime: raceTimeInput,
+                        venue: raceVenueInput
+                    }
+                }
+            })
+            setAddRaceSuccess(true);
+        } else {
+            return
+        }
+    };
+
+    // Add Horse
+    const handleSubmitAddHorse = () => {
+        if (horseNameInput !== "" && horseRankInput !== "") {
+            addHorse({
+                variables: {
+                    command: {
+                        name: (horseNameInput),
+                        rank: Number(horseRankInput)
+                    }
+                }
+            })
+            setAddHorseSuccess(true);
+        } else {
+            return
+        }
+    };
+
+    // Enroll Horse
+    const handleSubmitEnrollHorse = () => {
+        if (raceIdInput !== "" && horseIdInput !== "") {
+            enrollHorse({
+                variables: {
+                    command: {
+                        race: (raceIdInput),
+                        horse: (horseIdInput)
+                    }
+                }
+            })
+            setEnrollHorseSuccess(true);
+        } else {
+            return
+        }
+    };
+
+    // if (raceDataLoading) return <Text>Loading...</Text>;
+    // if (raceDataError) return <Text>Error </Text>;
+
+    ///////////////////////////// Table Component ////////////////////////////////////////
+
+    //Races Query
     const TableRaces = () => {
         return (
             <DataTable>
                 <DataTable.Header>
+                    <DataTable.Title >Race ID</DataTable.Title>
                     <DataTable.Title >Race No.</DataTable.Title>
                     <DataTable.Title >Start Time</DataTable.Title>
                     <DataTable.Title >Venue</DataTable.Title>
                 </DataTable.Header>
 
                 {raceDataResult.length > 0 ? (
-                raceDataResult.map((item) => {
-                    return (
-                    <DataTable.Row key={item.key}>
-                        <DataTable.Cell>{item.no}</DataTable.Cell>
-                        <DataTable.Cell >{item.startTime}</DataTable.Cell>
-                        <DataTable.Cell >{item.venue}</DataTable.Cell>
-                    </DataTable.Row>
-                )})
-                ):""}
+                    raceDataResult.map((item) => {
+                        return (
+                            <DataTable.Row key={item.key}>
+                                <DataTable.Cell>{item.id}</DataTable.Cell>
+                                <DataTable.Cell>{item.no}</DataTable.Cell>
+                                <DataTable.Cell >{item.startTime}</DataTable.Cell>
+                                <DataTable.Cell >{item.venue}</DataTable.Cell>
+                            </DataTable.Row>
+                        )
+                    })
+                ) : ""}
             </DataTable>
         );
     };
 
-    //Table Component - Horses Query
+    //Horses Query
     const TableHorses = () => {
         return (
             <DataTable>
                 <DataTable.Header>
+                    <DataTable.Title >Horse ID</DataTable.Title>
                     <DataTable.Title >Horse Name</DataTable.Title>
                     <DataTable.Title >Horse Rank</DataTable.Title>
                 </DataTable.Header>
                 {horseDataResult.length > 0 ? (
-                horseDataResult.map((item) => {
-                    return (
-                    <DataTable.Row key={item.key}>
-                        <DataTable.Cell>{item.name}</DataTable.Cell>
-                        <DataTable.Cell >{item.rank}</DataTable.Cell>
-                    </DataTable.Row>
-                )})
-                ):""}
+                    horseDataResult.map((item) => {
+                        return (
+                            <DataTable.Row key={item.key}>
+                                <DataTable.Cell>{item.id}</DataTable.Cell>
+                                <DataTable.Cell>{item.name}</DataTable.Cell>
+                                <DataTable.Cell >{item.rank}</DataTable.Cell>
+                            </DataTable.Row>
+                        )
+                    })
+                ) : ""}
             </DataTable>
         );
     };
+
+    /////////////////////////////////// Render ///////////////////////////////////////
 
     return (
         <SafeAreaView style={backgroundStyle}>
@@ -150,9 +260,7 @@ const LandingPage = () => {
                     }}>
                     <Section title="Query - All Races" isDarkMode={isDarkMode}>
                         Details of all races.
-                        
                     </Section>
-                    
                 </View>
                 <TableRaces />
                 <View
@@ -164,28 +272,11 @@ const LandingPage = () => {
                     </Section>
                 </View>
                 <TableHorses />
-                {/* <View
-                    style={{
-                        backgroundColor: isDarkMode ? Colors.black : Colors.white,
-                    }}>
-                    <Section title="Query - Login" isDarkMode={isDarkMode}>
-                        Login Details.
-                        <TableHorses />
-                    </Section>
-                </View> */}
-                {/* <TextInput
-                    style={styles.input}
-                    onChangeText={handleRaceNoChange}
-                    value={raceNo}
-                    placeholder="Enter Race Number"
-                    keyboardType="number-pad"
-                />
-                <Button title="Search" onPress={handleSearch} /> */}
-                {/* <View style={{
+                <View style={{
                     backgroundColor: isDarkMode ? Colors.black : Colors.white,
                 }}>
                     <Section title="Mutation - Add Race" isDarkMode={isDarkMode}>
-
+                        Input Race Number, Start Time and Venue to Add Race.
                     </Section>
                 </View>
                 <TextInput
@@ -200,53 +291,67 @@ const LandingPage = () => {
                     onChangeText={handleRaceTimeInputChange}
                     value={raceTimeInput}
                     placeholder="Enter Race Start Time"
-                    keyboardType="number-pad"
+                    keyboardType="default"
                 />
                 <TextInput
                     style={styles.input}
                     onChangeText={handleRaceVenueInputChange}
-                    value={raceVenuInput}
+                    value={raceVenueInput}
                     placeholder="Enter Race Venue"
-                    keyboardType="number-pad"
+                    keyboardType="default"
                 />
-                <Button title="Search" onPress={handleSubmitAddRace} />
+                <Button title="Submit" onPress={handleSubmitAddRace} />
                 <View style={{
                     backgroundColor: isDarkMode ? Colors.black : Colors.white,
                 }}>
                     <Section title="Mutation - Add Horse" isDarkMode={isDarkMode}>
-
+                        Input Horse Name and Horse Rank to Add Horse.
                     </Section>
                 </View>
                 <TextInput
                     style={styles.input}
-                    onChangeText={handleRaceNoChange}
-                    value={raceNo}
-                    placeholder="Enter Race Number"
+                    onChangeText={handleHorseNameInputChange}
+                    value={horseNameInput}
+                    placeholder="Enter Horse Name"
+                    keyboardType="default"
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={handleHorseRankInputChange}
+                    value={horseRankInput}
+                    placeholder="Enter Horse Rank"
                     keyboardType="number-pad"
                 />
-                <Button title="Search" onPress={handleSearch} />
+                <Button title="Submit" onPress={handleSubmitAddHorse} />
+
                 <View style={{
                     backgroundColor: isDarkMode ? Colors.black : Colors.white,
                 }}>
                     <Section title="Mutation - Enroll Horse" isDarkMode={isDarkMode}>
-
+                        Input Race ID and Horse ID to Enroll Horse.
                     </Section>
                 </View>
                 <TextInput
                     style={styles.input}
-                    onChangeText={handleRaceNoChange}
-                    value={raceNo}
-                    placeholder="Enter Race Number"
-                    keyboardType="number-pad"
+                    onChangeText={handleRaceIdInputChange}
+                    value={raceIdInput}
+                    placeholder="Enter Race ID"
+                    keyboardType="default"
                 />
-                <Button title="Search" onPress={handleSearch} /> */}
+                <TextInput
+                    style={styles.input}
+                    onChangeText={handleHorseIdInputChange}
+                    value={horseIdInput}
+                    placeholder="Enter Horse ID"
+                    keyboardType="default"
+                />
+                <Button title="Submit" onPress={handleSubmitEnrollHorse} />
             </ScrollView>
         </SafeAreaView>
     );
 };
 
 const Section = (props) => {
-
     return (
         <View style={styles.sectionContainer}>
             <Text

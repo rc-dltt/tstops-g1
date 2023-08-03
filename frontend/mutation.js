@@ -1,49 +1,38 @@
 import { gql } from 'graphql-tag';
 
 const addRaceMutation = gql`
-  mutation RaceByNo($no: Int!) {
-    races(no: $no) {
-      id
+  mutation addRace(
+    $command: AddRaceInput!
+  ) {
+    addRace(
+      command: $command) {
       no
       startTime
       venue
-      horses {
-        id
-        name
-        rank
-      }
     }
   }
 `;
 
 const addHorseMutation = gql`
-  mutation RaceByNo($no: Int!) {
-    races(no: $no) {
-      id
-      no
-      startTime
-      venue
-      horses {
-        id
-        name
-        rank
-      }
+  mutation addHorse(
+    $command: AddHorseInput!
+  ) {
+    addHorse(
+      command: $command) {
+      name
+      rank
     }
   }
 `;
 
 const enrollHorseMutation = gql`
-  mutation enrollHorse(command: $horse: Int!) {
-    races(no: $no) {
-      id
-      no
-      startTime
-      venue
-      horses {
-        id
-        name
-        rank
-      }
+  mutation enrollHorse(
+    $command: EnrollHorseInput!
+  ) {
+    enrollHorse(
+      command: $command) {
+      race
+      horse
     }
   }
 `;
