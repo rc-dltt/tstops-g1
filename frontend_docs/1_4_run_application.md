@@ -9,7 +9,7 @@ pod install
 ```
 
 ## Build ios
-Access to `./ios` directory.
+Access to `/frontend-demo/demo/` directory.
 ```bash
 npm run build:ios
 ```
