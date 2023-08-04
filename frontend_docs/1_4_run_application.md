@@ -2,16 +2,16 @@
 
 In this lab section we are going to build and run the React-Native application with ios.
 
-## Build ios
-Access to `./ios` directory.
-```bash
-npm run build:ios
-```
-
 ## Pod install
 Access to `./ios` directory.
 ```bash
 pod install
+```
+
+## Build ios
+Access to `./ios` directory.
+```bash
+npm run build:ios
 ```
 
 ## Start the Apollo Server
@@ -38,4 +38,4 @@ XCode Simulator will be opened and install the application.
 
 You have completed this section
 
-[< prev](./1_2_create_queries_mutations.md) | [home](../readme.md)
+[< prev](./1_3_setup_application.md) | [home](../readme.md)
