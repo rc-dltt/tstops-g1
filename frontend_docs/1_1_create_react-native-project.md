@@ -7,31 +7,15 @@ In this lab section we are going to create a react-native project using React-Na
 The first step is to create a folder for our application
 
 ```bash
-mkdir frontend
-cd frontend
-```
-
-Now that we have our app folder, let's initialize a new NodeJs application
-
-```bash
-npm init
-...
-```
-
-## Install packages
-
-Let's now install the required `npm` packages.
-
-For this application, we are going to need `react`, `react-native`, `react-native-paper`, `@apollo/client`, `@react-native-async-storage/async-storage` and `graphql-tag`.
-
-```bash
-npm install react react-native react-native-paper @apollo/client @react-native-async-storage/async-storage graphql-tag
+mkdir frontend-demo
+cd frontend-demo
 ```
 
 ## Create React-Native project wtih React-Native CLI
 To create a react-native project named  `frontend-demo`.
 ```bash
-npx react-native@latest init frontend-demo
+npx react-native@latest init demo
+cd demo
 ```
 
 Add `build:ios` script in `package.json`
@@ -44,8 +28,33 @@ Add `build:ios` script in `package.json`
 ...
 ```
 
-## Create `LandingPage.js` / `query.js` / `mutation.js`
+## Install packages
 
+Let's now install the required `npm` packages.
+
+For this application, we are going to need `react`, `react-native`, `react-native-paper`, `@apollo/client`, `@react-native-async-storage/async-storage`, `react-native-safe-area-context`,`react-native-vector-icons`,`apollo-link-context`,`graphql-tag`, `@react-native/gradle-plugin`, `@apollo/react-hooks` and `@react-native/gradle-plugin`.
+
+```bash
+npm install react react-native react-native-paper @apollo/client @apollo/react-hooks @react-native-async-storage/async-storage graphql-tag @react-native/gradle-plugin apollo-link-context react-native-vector-icons react-native-safe-area-context
+```
+
+## ios/demo/AppDelegate.mm
+
+In `/demo/ios/AppDelegate.mm`:
+Replace `[[RCTBuntleURL Provider … ];` with `[NSURL URLWithString:@"http://localhost:8082/index.bundle?platform=ios"];`
+```mm
+...
+#if DEBUG
+  return [NSURL URLWithString:@"http://localhost:8082/index.bundle?platform=ios"];
+#else
+  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+#endif
+}
+...
+```
+
+
+## Create `LandingPage.js` / `query.js` / `mutation.js`
 Create `LandingPage.js`, `query.js` and `mutation.js` in project's root directory with packages imported.
 
 `LandingPage.js`
@@ -80,8 +89,21 @@ import { gql } from 'graphql-tag';
 ...
 ```
 
+## Add  `"comilerOptions"`
+In `/demo/tsconfig.json`:
+```json
+{
+  "compilerOptions": {
+  "jsx": "react"
+},
+  "extends": "@tsconfig/react-native/tsconfig.json"
+}
+```
+
 ## Import packages, `LandingPage.js` and setup Apollo Client in `App.js`
-`App.js`
+Rename the `App.tsx` to `App.js`.
+
+Replace existing content in `App.js` to:
 ```js
 import { React } from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
@@ -91,7 +113,7 @@ import LandingPage from './LandingPage';
 const client = new ApolloClient({
   link: createHttpLink({
   uri: 'http://localhost:4001/'
-});,
+}),
   cache: new InMemoryCache()
 });
 

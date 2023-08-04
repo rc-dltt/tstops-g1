@@ -1,6 +1,6 @@
 # 0.1 Setup Your Environment
 
-We are going to need `Visual Studio code` as our IDE, `git`, `docker` with `compose`, `node` with `npm` and `postman`
+We are going to need `Visual Studio code` as our IDE, `git`, `docker` with `compose` and `node` with `npm`.
 
 ### MacOS
 
@@ -84,16 +84,6 @@ node --version
 ```bash
 npm --version
 > 9.6.7
-```
-
-## Postman
-
-Install postman from the [official website]() or with homebrew
-
-```bash
-brew install --cask postman
-...
-==> Downloading https://dl.pstmn.io/download/version/10.16.0/...
 ```
 
 ## Next

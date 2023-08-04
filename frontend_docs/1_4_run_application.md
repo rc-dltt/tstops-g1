@@ -8,14 +8,28 @@ Access to `./ios` directory.
 npm run build:ios
 ```
 
+## Pod install
+Access to `./ios` directory.
+```bash
+pod install
+```
+
 ## Start the Apollo Server
-Access to the `/src` directory of `Apollo Server`.
+Access to `/1_3_queries_and_mutations/final/src`.
 ```bash
 npm start
 ```
+OR
+Access to `/1_3_queries_and_mutations/final`.
+```bash
+docker build -t hkjc-demo-grapqh-server .
+```
+```bash
+docker run --rm -p 4001:4001 -e PORT=4001 hkjc-demo-grapqh-server
+```
 
 ## Run the application in ios
-Access to the frontend root directory.
+Access to the frontend root directory - `/frontend-demo/demo/`.
 ```bash
 npx react-native run-ios --port 8082
 ```

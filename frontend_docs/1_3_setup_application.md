@@ -31,7 +31,7 @@ const LandingPage = () => {
 ```
 
 ## Create a component named `Section`
-Create the variable after the `LandingPage` coomponent, to reuse it in `LandingPage` component.
+Create the component after the `LandingPage` coomponent, to reuse it in `LandingPage` component.
 
 `LandingPage.js`
 ```js
@@ -333,7 +333,7 @@ return (
             <ScrollView
                 contentInsetAdjustmentBehavior="automatic"
                 style={backgroundStyle}>
-                
+
                 {/* Query - All Races */}
                 <View
                     style={{
@@ -456,4 +456,4 @@ export default LandingPage;
 
 You have completed this section
 
-[< prev](./1_2_create_queries_mutations.md) | [home](../readme.md) | [next >](./1_4_connect_gql_server.md)
+[< prev](./1_2_create_queries_mutations.md) | [home](../readme.md) | [next >](./1_4_run_application.md)

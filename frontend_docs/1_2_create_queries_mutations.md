@@ -1,6 +1,6 @@
 # 1.2 Create Queries and Mutations
 
-In this lab section we are going to create queries and mutations based on the `schema.graphql` on server side.
+In this lab section we are going to create queries and mutations based on the `schema.graphql` in `/1_3_queries_and_mutations/final/src`.
 
 ## Creating Queries in `query.js`
 
@@ -34,7 +34,6 @@ const allHorseQuery = gql`
 `mutation.js`
 ```js
 ...
-
 const addRaceMutation = gql`
   mutation addRace(
     $command: AddRaceInput!
