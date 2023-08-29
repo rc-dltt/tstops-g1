@@ -1,0 +1,29 @@
+{
+  "name": "a-day-at-the-races",
+  "version": "1.0.0",
+  "description": "TSTOPS-G1 Apollo graphQL server application",
+  "main": "dist/index.js",
+  "scripts": {
+    "copy-data": "copyfiles -f ./src/data/*.json ./dist/data",
+    "compile": "tsc && npm run copy-data",
+    "start": "npm run compile && node ./dist/index.js"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "@apollo/server": "^4.8.1",
+    "@graphql-tools/schema": "^10.0.0",
+    "copyfiles": "^2.4.1",
+    "graphql": "^16.7.1",
+    "graphql-subscriptions": "^2.0.0",
+    "graphql-ws": "^5.14.0",
+    "notarealdb": "^0.2.2",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "typescript": "^5.1.6"
+  }
+}
