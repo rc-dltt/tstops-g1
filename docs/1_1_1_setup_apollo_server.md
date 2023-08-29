@@ -115,8 +115,6 @@ schema {
 }
 
 type Query {
-  users: [User!]!
-  currentUser: User
   races: [Race]!
   horses: [Horse]!
 }
@@ -135,7 +133,6 @@ type Horse {
   rank: Int
   race: Race
 }
-`;
 ```
 
 The domain model is very simple: a collection of races, each one having a set of racing horses.
