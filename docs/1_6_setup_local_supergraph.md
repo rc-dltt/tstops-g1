@@ -87,14 +87,16 @@ In the root folder create `supergraph.yaml`
 ```yaml
 subgraphs:
   races:
-    routing_url: http://localhost:4001/graphql
+    routing_url: http://races:4001/graphql
     schema:
       subgraph_url: http://localhost:4001/graphql
   matches:
-    routing_url: http://localhost:4002/graphql
+    routing_url: http://matches:4002/graphql
     schema:
       subgraph_url: http://localhost:4002/graphql
 ```
+
+Because we are running this from docker compose we need to se tthe routing url hosts according to our compose file services.
 
 We need to run the services to connect rover and save the supergraph schema to `src/supergraph.graphql`
 
