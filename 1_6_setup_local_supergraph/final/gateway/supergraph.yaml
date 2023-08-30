@@ -1,9 +1,9 @@
 subgraphs:
   races:
-    routing_url: http://localhost:4001/graphql
+    routing_url: http://races:4001/graphql
     schema:
       subgraph_url: http://localhost:4001/graphql
   matches:
-    routing_url: http://localhost:4002/graphql
+    routing_url: http://matches:4002/graphql
     schema:
       subgraph_url: http://localhost:4002/graphql

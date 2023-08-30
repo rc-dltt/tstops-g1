@@ -41,8 +41,8 @@ type Horse
 scalar join__FieldSet
 
 enum join__Graph {
-  MATCHES @join__graph(name: "matches", url: "http://localhost:4002/graphql")
-  RACES @join__graph(name: "races", url: "http://localhost:4001/graphql")
+  MATCHES @join__graph(name: "matches", url: "http://matches:4002/graphql")
+  RACES @join__graph(name: "races", url: "http://races:4001/graphql")
 }
 
 scalar link__Import
